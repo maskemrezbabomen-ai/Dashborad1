@@ -303,7 +303,7 @@ h2 {
 
 .rule-top .val {
   color: var(--text);
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Poppins', sans-serif;
 }
 
 .rule-bar {
