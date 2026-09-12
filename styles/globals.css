@@ -1,10 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg: #CAE9FF;
+  --bg: ##0A0C12;
   --panel: #FFFFFF;
   --panel-alt: #F5F9FD;
-  --sidebar: #5FA8D3;
+  --sidebar: #4a6c93;
 
   --border: #D5E4F2;
   --border-soft: #E1ECF6;
