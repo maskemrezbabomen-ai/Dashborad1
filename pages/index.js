@@ -225,7 +225,7 @@ export default function Dashboard() {
     <span
       style={{
         color: 'var(--text)',
-        fontSize: '11px',
+        fontSize: '14px',
         fontWeight: 600,
       }}
     >
