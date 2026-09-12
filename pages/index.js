@@ -223,6 +223,15 @@ export default function Dashboard() {
   />
 </div>
 
+<div
+  style={{
+    width: '80%',
+    height: '1px',
+    background: 'rgba(255,255,255,0.15)',
+    margin: '-10px auto 0',
+  }}
+></div>
+
         <div className="profile-footer">
           <div className="profile-line"></div>
 
