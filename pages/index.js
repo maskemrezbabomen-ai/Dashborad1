@@ -235,17 +235,38 @@ export default function Dashboard() {
               textAlign: 'center',
             }}
           >
-            <span
-              style={{
-                color: 'var(--text)',
-                fontSize: '14px',
-                fontWeight: 600,
-                position: 'relative',
-                top: '-20px',
-              }}
-            >
-              Emre
-            </span>
+           <div
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '9px',
+    position: 'relative',
+    top: '-10px',
+  }}
+>
+  <img
+    src="https://i.hizliresim.com/39zkmdt0.jpg"
+    alt="Emre"
+    style={{
+      width: '30px',
+      height: '30px',
+      objectFit: 'cover',
+      borderRadius: '6px',
+      display: 'block',
+    }}
+  />
+
+  <span
+    style={{
+      color: 'var(--text)',
+      fontSize: '14px',
+      fontWeight: 600,
+    }}
+  >
+    Emre
+  </span>
+</div>
           </div>
         </div>
 
