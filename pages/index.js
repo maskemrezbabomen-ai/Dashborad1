@@ -222,7 +222,7 @@ export default function Dashboard() {
               <div className="hero">
                 <div className="label">GÜNCEL BAKİYE</div>
                 <div className="hero-row">
-                  <div className="balance mono">{fmt(balance)}</div>
+                  <div className="balance">{fmt(balance)}</div>
                   {entries.length === 0 ? (
                     <div className="delta zero">Henüz kayıt yok</div>
                   ) : (
