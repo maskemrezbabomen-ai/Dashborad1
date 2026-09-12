@@ -210,9 +210,20 @@ export default function Dashboard() {
 
         <div style={{ flex: 1 }} />
 
-        <div className="nav">
-          <NavItem label="Ayarlar" active={view === 'settings'} onClick={() => setView('settings')} />
-        </div>
+<div
+  className="nav"
+  style={{
+    width: '100%',
+    display: 'flex',
+    justifyContent: 'center',
+  }}
+>
+  <NavItem
+    label="Ayarlar"
+    active={view === 'settings'}
+    onClick={() => setView('settings')}
+  />
+</div>
 
         <div className="profile-footer">
           <div className="profile-line"></div>
