@@ -249,8 +249,8 @@ export default function Dashboard() {
     src="https://i.hizliresim.com/39zkmdt0.jpg"
     alt="Emre"
     style={{
-      width: '30px',
-      height: '30px',
+      width: '40px',
+      height: '40px',
       objectFit: 'cover',
       borderRadius: '6px',
       display: 'block',
