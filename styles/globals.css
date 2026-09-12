@@ -691,4 +691,9 @@ td.note-cell {
   .settings-grid {
     grid-template-columns: 1fr;
   }
+
+  .hero .balance {
+  font-family: 'Poppins', sans-serif;
+  }
+  
 }
