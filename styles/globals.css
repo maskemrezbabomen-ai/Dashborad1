@@ -138,8 +138,8 @@ body {
 }
 
 .main {
-  flex: 1;
-  min-width: 0;
+  margin-left: 220px;
+  width: calc(100% - 220px);
 }
 
 .wrap {
