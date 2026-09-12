@@ -695,26 +695,6 @@ td.note-cell {
   font-family: 'Poppins', sans-serif !important;
   }
   
-  .profile {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 4px 0;
-  }
-
-  .profile-info {
-  width: 100%;
-  text-align: center;
-  }
-
-  .profile-name {
-  color: var(--text);
-  font-size: 11px !important;
-  font-weight: 600;
-  line-height: 1.2;
-  }
-
   .profile-footer {
   width: 100%;
   margin-top: auto;
@@ -726,5 +706,26 @@ td.note-cell {
   width: 100%;
   background: var(--border-soft);
   margin-bottom: 12px;
+  }
+
+  .profile {
+  position: relative;
+  width: 100%;
+  height: 24px;
+  }
+
+  .profile-info {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  }
+
+  .profile-name {
+  color: var(--text);
+  font-size: 11px !important;
+  font-weight: 600;
+  line-height: 24px;
+  text-align: center;
   }
 }
