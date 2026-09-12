@@ -223,11 +223,13 @@ export default function Dashboard() {
     }}
   >
     <span
-      style={{
-        color: 'var(--text)',
-        fontSize: '14px',
-        fontWeight: 600,
-      }}
+    style={{
+    color: 'var(--text)',
+    fontSize: '14px',
+    fontWeight: 600,
+    position: 'relative',
+    top: '-10px',
+    }}
     >
       Emre
     </span>
