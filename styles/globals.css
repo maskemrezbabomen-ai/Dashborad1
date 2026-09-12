@@ -1,21 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
 :root {
-  --bg: #0F1113;
-  --panel: #17191C;
-  --panel-alt: #14161A;
-  --sidebar: #131518;
-  --border: #2A2D31;
-  --border-soft: #212327;
-  --text: #ECE9E2;
-  --text-muted: #8A8F96;
-  --text-dim: #5C6066;
-  --accent: #C99A3E;
-  --accent-soft: rgba(201, 154, 62, 0.14);
-  --pos: #5FA98A;
-  --pos-soft: rgba(95, 169, 138, 0.14);
-  --neg: #C1614F;
-  --neg-soft: rgba(193, 97, 79, 0.14);
+  --bg: #F4F8FC;
+  --panel: #FFFFFF;
+  --panel-alt: #F8FAFC;
+  --sidebar: #0F2747;
+
+  --border: #D9E6F2;
+  --border-soft: #E7EFF7;
+
+  --text: #102A43;
+  --text-muted: #647A90;
+  --text-dim: #94A8BA;
+
+  --accent: #2563EB;
+  --accent-soft: rgba(37, 99, 235, 0.10);
+
+  --pos: #16A34A;
+  --pos-soft: rgba(22, 163, 74, 0.10);
+
+  --neg: #DC2626;
+  --neg-soft: rgba(220, 38, 38, 0.10);
 }
 
 * {
