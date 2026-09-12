@@ -127,14 +127,6 @@ body {
   flex: 1;
 }
 
-.nav-footer {
-  padding: 0 12px 18px;
-}
-
-.nav-footer .logout-link {
-  padding: 10px 12px;
-}
-
 .logout-link {
   color: var(--text);
   font-size: 11px;
@@ -707,8 +699,13 @@ td.note-cell {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px 8px;
   width: 100%;
+  padding: 4px 0;
+  }
+
+  .profile-info {
+  width: 100%;
+  text-align: center;
   }
 
   .profile-name {
@@ -716,6 +713,18 @@ td.note-cell {
   font-size: 11px !important;
   font-weight: 600;
   line-height: 1.2;
-  text-align: center;
+  }
+
+  .profile-footer {
+  width: 100%;
+  margin-top: auto;
+  padding: 0 12px 18px;
+  }
+
+  .profile-line {
+  height: 1px;
+  width: 100%;
+  background: var(--border-soft);
+  margin-bottom: 12px;
   }
 }
