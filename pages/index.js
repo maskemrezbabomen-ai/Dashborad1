@@ -195,48 +195,52 @@ export default function Dashboard() {
 
   return (
     <div className="app">
-      <div className="sidebar">
-        <div className="sidebar-brand">
-          <div className="name">{settings.accountLabel}</div>
-          <div className="firm">{settings.firmName}</div>
-        </div>
-        <div className="nav">
-          <NavItem label="Dashboard" active={view === 'dashboard'} onClick={() => setView('dashboard')} />
-          <NavItem label="Sertifikalar" active={view === 'certificates'} onClick={() => setView('certificates')} />
-          <NavItem label="Notlar" active={view === 'journal'} onClick={() => setView('journal')} />
-<div className="nav">
-  <NavItem label="Ayarlar" active={view === 'settings'} onClick={() => setView('settings')} />
-</div>
+ <div className="sidebar">
+  <div className="sidebar-brand">
+    <div className="name">{settings.accountLabel}</div>
+    <div className="firm">{settings.firmName}</div>
+  </div>
 
-<div className="profile-footer">
-  <div className="profile-line"></div>
+  <div className="nav">
+    <NavItem label="Dashboard" active={view === 'dashboard'} onClick={() => setView('dashboard')} />
+    <NavItem label="Sertifikalar" active={view === 'certificates'} onClick={() => setView('certificates')} />
+    <NavItem label="Notlar" active={view === 'journal'} onClick={() => setView('journal')} />
+  </div>
 
-  <div
-    style={{
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      textAlign: 'center',
-    }}
-  >
-    <span
-    style={{
-    color: 'var(--text)',
-    fontSize: '14px',
-    fontWeight: 600,
-    position: 'relative',
-    top: '-10px',
-    }}
+  <div className="nav-spacer" />
+
+  <div className="nav">
+    <NavItem label="Ayarlar" active={view === 'settings'} onClick={() => setView('settings')} />
+  </div>
+
+  <div className="profile-footer">
+    <div className="profile-line"></div>
+
+    <div
+      style={{
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        textAlign: 'center',
+      }}
     >
-      Emre
-    </span>
+      <span
+        style={{
+          color: 'var(--text)',
+          fontSize: '14px',
+          fontWeight: 600,
+          position: 'relative',
+          top: '-10px',
+        }}
+      >
+        Emre
+      </span>
+    </div>
   </div>
 </div>
-      
-</div>
 
-     <div className="main">
+<div className="main">
         <div className="wrap">
           {view === 'dashboard' && (
             <>
