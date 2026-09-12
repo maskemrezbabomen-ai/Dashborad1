@@ -443,7 +443,7 @@ tbody tr:last-child td {
 }
 
 td.num {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Poppins', sans-serif;
 }
 
 td.change.pos {
