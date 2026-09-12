@@ -209,10 +209,18 @@ export default function Dashboard() {
         <div className="nav">
           <NavItem label="Ayarlar" active={view === 'settings'} onClick={() => setView('settings')} />
         </div>
-        <div className="nav-footer">
-          <span className="logout-link" onClick={handleLogout}>Çıkış yap</span>
-        </div>
-      </div>
+<div className="profile-footer">
+  <div className="profile-line"></div>
+
+  <div className="profile">
+    <div className="profile-avatar">E</div>
+
+    <div className="profile-info">
+      <div className="profile-name">Emre</div>
+      <div className="profile-motto">Stay disciplined.</div>
+    </div>
+  </div>
+</div>
 
       <div className="main">
         <div className="wrap">
