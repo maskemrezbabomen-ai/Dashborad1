@@ -366,7 +366,7 @@ h2 {
   color: var(--text);
   padding: 9px 10px;
   font-size: 14px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Poppins', sans-serif;
   outline: none;
   transition: border-color .15s;
 }
