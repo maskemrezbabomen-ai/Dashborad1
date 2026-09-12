@@ -217,7 +217,6 @@ export default function Dashboard() {
 
     <div className="profile-info">
       <div className="profile-name">Emre</div>
-      <div className="profile-motto">Stay disciplined.</div>
     </div>
   </div>
 </div>
