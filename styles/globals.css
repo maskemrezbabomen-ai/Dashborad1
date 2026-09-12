@@ -128,7 +128,8 @@ body {
 }
 
 .nav-footer {
-  padding: 0 12px;
+  padding: 0 12px 10px;
+  margin-top: 0;
 }
 
 .logout-link {
