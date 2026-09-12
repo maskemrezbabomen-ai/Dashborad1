@@ -692,7 +692,7 @@ td.note-cell {
     grid-template-columns: 1fr;
   }
 
-  .hero .balance {
-  font-family: 'Poppins', sans-serif;
+  .hero .balance.mono {
+  font-family: 'Poppins', sans-serif !important;
   }
 }
