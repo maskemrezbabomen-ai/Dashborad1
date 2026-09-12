@@ -55,6 +55,7 @@ body {
   height: 100vh;
   flex-shrink: 0;
   background: var(--sidebar);
+  box-sizing: border-box;
 }
 
 .sidebar-brand {
@@ -123,6 +124,7 @@ body {
 
 .nav-spacer {
   flex: 1;
+  min-height: 0;
 }
 
 .logout-link {
