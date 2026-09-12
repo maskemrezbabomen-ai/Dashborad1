@@ -210,14 +210,7 @@ export default function Dashboard() {
 
         <div style={{ flex: 1 }} />
 
-<div
-  className="nav"
-  style={{
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-  }}
->
+<div className="nav nav-settings">
   <NavItem
     label="Ayarlar"
     active={view === 'settings'}
