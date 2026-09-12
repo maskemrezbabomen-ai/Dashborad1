@@ -703,13 +703,6 @@ td.note-cell {
   font-family: 'Poppins', sans-serif !important;
   }
   
-  .profile-name {
-  color: var(--text);
-  font-size: 11px !important;
-  font-weight: 600;
-  line-height: 1.2;
-  }
-  
   .profile {
   display: flex;
   align-items: center;
@@ -717,5 +710,12 @@ td.note-cell {
   gap: 10px;
   padding: 4px 8px;
   width: 100%;
+  }
+
+  .profile-name {
+  color: var(--text);
+  font-size: 11px !important;
+  font-weight: 600;
+  line-height: 1.2;
   }
 }
