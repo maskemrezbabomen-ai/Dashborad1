@@ -700,10 +700,11 @@ td.note-cell {
   
   .profile-footer {
   position: absolute;
-  bottom: 30px;
+  bottom: 30px !important;
   left: 0;
   width: 100%;
   padding: 0 12px;
+  box-sizing: border-box;
   }
 
   .profile-line {
