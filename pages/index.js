@@ -202,20 +202,16 @@ export default function Dashboard() {
           <div className="firm">{settings.firmName}</div>
         </div>
 
-        <div className="nav">
-          <NavItem label="Dashboard" active={view === 'dashboard'} onClick={() => setView('dashboard')} />
-          <NavItem label="Sertifikalar" active={view === 'certificates'} onClick={() => setView('certificates')} />
-          <NavItem label="Notlar" active={view === 'journal'} onClick={() => setView('journal')} />
-        </div>
+<div className="nav">
+  <NavItem label="Dashboard" active={view === 'dashboard'} onClick={() => setView('dashboard')} />
+  <NavItem label="Sertifikalar" active={view === 'certificates'} onClick={() => setView('certificates')} />
+  <NavItem label="Notlar" active={view === 'journal'} onClick={() => setView('journal')} />
+</div>
 
-        <div style={{ flex: 1 }} />
+<div style={{ flex: 1 }} />
 
-<div className="nav nav-settings">
-  <NavItem
-    label="Ayarlar"
-    active={view === 'settings'}
-    onClick={() => setView('settings')}
-  />
+<div className="nav">
+  <NavItem label="Ayarlar" active={view === 'settings'} onClick={() => setView('settings')} />
 </div>
 
         <div className="profile-footer">
