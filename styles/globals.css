@@ -709,7 +709,8 @@ td.note-cell {
   justify-content: center;
   gap: 10px;
   padding: 4px 8px;
-  width: 100%;
+  width: 220px;
+  margin: 0 auto;
   }
 
   .profile-name {
@@ -717,5 +718,6 @@ td.note-cell {
   font-size: 11px !important;
   font-weight: 600;
   line-height: 1.2;
-  }
+  text-align: center;
+  } 
 }
