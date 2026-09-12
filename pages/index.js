@@ -210,25 +210,15 @@ export default function Dashboard() {
           <NavItem label="Ayarlar" active={view === 'settings'} onClick={() => setView('settings')} />
         </div>
 <div
-  className="profile-footer"
-  style={{
-    width: '100%',
-    textAlign: 'center',
-  }}
->
-  <div
-    className="profile-line"
-    style={{
-      width: '100%',
-      height: '1px',
-      background: 'var(--border-soft)',
-      marginBottom: '12px',
-    }}
-  />
+<div className="profile-footer">
+  <div className="profile-line"></div>
 
   <div
     style={{
       width: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
       textAlign: 'center',
     }}
   >
@@ -236,15 +226,17 @@ export default function Dashboard() {
       style={{
         color: 'var(--text)',
         fontSize: '11px',
-        fontWeight: '600',
+        fontWeight: 600,
       }}
     >
       Emre
     </span>
   </div>
 </div>
-  
-      <div className="main">
+      
+</div>
+
+     <div className="main">
         <div className="wrap">
           {view === 'dashboard' && (
             <>
