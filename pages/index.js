@@ -209,7 +209,7 @@ export default function Dashboard() {
         <div className="nav">
           <NavItem label="Ayarlar" active={view === 'settings'} onClick={() => setView('settings')} />
         </div>
-<div
+
 <div className="profile-footer">
   <div className="profile-line"></div>
 
