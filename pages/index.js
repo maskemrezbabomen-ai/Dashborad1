@@ -209,16 +209,39 @@ export default function Dashboard() {
         <div className="nav">
           <NavItem label="Ayarlar" active={view === 'settings'} onClick={() => setView('settings')} />
         </div>
-<div className="profile-footer">
-  <div className="profile-line"></div>
+<div
+  className="profile-footer"
+  style={{
+    width: '100%',
+    textAlign: 'center',
+  }}
+>
+  <div
+    className="profile-line"
+    style={{
+      width: '100%',
+      height: '1px',
+      background: 'var(--border-soft)',
+      marginBottom: '12px',
+    }}
+  />
 
-  <div className="profile">
-
-    <div className="profile-info">
-      <div className="profile-name">Emre</div>
-    </div>
+  <div
+    style={{
+      width: '100%',
+      textAlign: 'center',
+    }}
+  >
+    <span
+      style={{
+        color: 'var(--text)',
+        fontSize: '11px',
+        fontWeight: '600',
+      }}
+    >
+      Emre
+    </span>
   </div>
-</div>
 </div>
   
       <div className="main">
