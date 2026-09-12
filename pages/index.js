@@ -204,12 +204,7 @@ export default function Dashboard() {
           <NavItem label="Dashboard" active={view === 'dashboard'} onClick={() => setView('dashboard')} />
           <NavItem label="Sertifikalar" active={view === 'certificates'} onClick={() => setView('certificates')} />
           <NavItem label="Notlar" active={view === 'journal'} onClick={() => setView('journal')} />
-<div
-  className="nav"
-  style={{
-    marginBottom: '12px',
-  }}
->
+<div className="nav">
   <NavItem label="Ayarlar" active={view === 'settings'} onClick={() => setView('settings')} />
 </div>
 
