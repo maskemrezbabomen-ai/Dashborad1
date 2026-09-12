@@ -210,8 +210,17 @@ export default function Dashboard() {
 
 <div style={{ flex: 1 }}></div>
 
-<div className="nav">
-  <NavItem label="Ayarlar" active={view === 'settings'} onClick={() => setView('settings')} />
+<div
+  className="nav"
+  style={{
+    transform: 'translateY(-25px)',
+  }}
+>
+  <NavItem
+    label="Ayarlar"
+    active={view === 'settings'}
+    onClick={() => setView('settings')}
+  />
 </div>
 
         <div className="profile-footer">
