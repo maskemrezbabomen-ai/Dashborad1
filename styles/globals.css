@@ -54,9 +54,7 @@ body {
   padding: 26px 0;
   display: flex;
   flex-direction: column;
-  position: sticky;
-  top: 0;
-  height: 100vh;
+  position: relative;
 }
 
 .sidebar-brand {
@@ -696,36 +694,36 @@ td.note-cell {
   }
   
   .profile-footer {
+  position: absolute;
+  bottom: 18px;
+  left: 0;
   width: 100%;
-  margin-top: auto;
-  padding: 0 12px 18px;
+  padding: 0 12px;
   }
 
   .profile-line {
-  height: 1px;
   width: 100%;
+  height: 1px;
   background: var(--border-soft);
   margin-bottom: 12px;
   }
 
   .profile {
-  position: relative;
   width: 100%;
-  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   }
 
   .profile-info {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: max-content;
+  width: 100%;
+  text-align: center;
   }
 
   .profile-name {
   color: var(--text);
   font-size: 11px !important;
   font-weight: 600;
-  line-height: 24px;
-  text-align: center;
+  line-height: 1.2;
   }
 }
