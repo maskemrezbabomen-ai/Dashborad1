@@ -213,7 +213,7 @@ export default function Dashboard() {
   <div className="profile-line"></div>
 
   <div className="profile">
-    <div className="profile-avatar">E</div>
+    <div className="profile-avatar"></div>
 
     <div className="profile-info">
       <div className="profile-name">Emre</div>
