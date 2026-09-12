@@ -246,10 +246,10 @@ export default function Dashboard() {
   }}
 >
   <img
-    src="https://i.hizliresim.com/39zkmdt0.jpg"
+    src="https://i.hizliresim.com/xjm282gg.jpg"
     alt="Emre"
     style={{
-      marginLeft: '-50px',
+      marginLeft: '-70px',
       width: '40px',
       height: '40px',
       objectFit: 'cover',
