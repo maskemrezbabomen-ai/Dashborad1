@@ -702,4 +702,11 @@ td.note-cell {
   .hero .balance.mono {
   font-family: 'Poppins', sans-serif !important;
   }
+  
+  .profile-name {
+  color: var(--text);
+  font-size: 11px !important;
+  font-weight: 600;
+  line-height: 1.2;
+  }
 }
