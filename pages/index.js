@@ -251,7 +251,7 @@ export default function Dashboard() {
     justifyContent: 'center',
     gap: '9px',
     position: 'relative',
-    top: '-30px',
+    top: '-10px',
   }}
 >
   <img
