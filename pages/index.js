@@ -228,7 +228,7 @@ export default function Dashboard() {
     width: '80%',
     height: '1px',
     background: 'rgba(255,255,255,0.15)',
-    margin: '-25px auto 0',
+    margin: '-15px auto 0',
   }}
 ></div>
 
@@ -251,7 +251,7 @@ export default function Dashboard() {
     justifyContent: 'center',
     gap: '9px',
     position: 'relative',
-    top: '15px',
+    top: '20px',
   }}
 >
   <img
