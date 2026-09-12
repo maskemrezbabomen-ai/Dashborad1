@@ -228,7 +228,7 @@ export default function Dashboard() {
     width: '80%',
     height: '1px',
     background: 'rgba(255,255,255,0.15)',
-    margin: '-10px auto 0',
+    margin: '8px auto 0',
   }}
 ></div>
 
