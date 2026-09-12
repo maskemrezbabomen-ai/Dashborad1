@@ -195,7 +195,7 @@ export default function Dashboard() {
 
   return (
     <div className="app">
- <div className="sidebar">
+<div className="sidebar">
   <div className="sidebar-brand">
     <div className="name">{settings.accountLabel}</div>
     <div className="firm">{settings.firmName}</div>
