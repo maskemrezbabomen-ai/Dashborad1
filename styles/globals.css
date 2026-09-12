@@ -731,6 +731,6 @@ td.note-cell {
   }
   
   .nav-settings {
-  transform: translateY(-30px);
+  transform: translateY(25px);
   }
 }
