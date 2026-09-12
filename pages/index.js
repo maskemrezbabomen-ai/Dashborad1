@@ -249,7 +249,7 @@ export default function Dashboard() {
     src="https://i.hizliresim.com/xjm282gg.jpg"
     alt="Emre"
     style={{
-      marginLeft: '-70px',
+      marginLeft: '-100px',
       width: '40px',
       height: '40px',
       objectFit: 'cover',
