@@ -729,4 +729,8 @@ td.note-cell {
   font-weight: 600;
   line-height: 1.2;
   }
+  
+  .nav-settings {
+  transform: translateY(-15px);
+  }
 }
