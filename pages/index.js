@@ -221,7 +221,8 @@ export default function Dashboard() {
     </div>
   </div>
 </div>
-
+</div>
+  
       <div className="main">
         <div className="wrap">
           {view === 'dashboard' && (
