@@ -208,7 +208,7 @@ export default function Dashboard() {
   <NavItem label="Notlar" active={view === 'journal'} onClick={() => setView('journal')} />
 </div>
 
-<div style={{ flex: 1 }} />
+<div style={{ flex: 1 }}></div>
 
 <div className="nav">
   <NavItem label="Ayarlar" active={view === 'settings'} onClick={() => setView('settings')} />
