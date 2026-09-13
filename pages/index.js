@@ -234,7 +234,7 @@ export default function Dashboard() {
 
 <div
   style={{
-    width: '80%',
+    width: '100%',
     height: '1px',
     background: 'rgba(255,255,255,0.15)',
     margin: '-25px auto 0',
