@@ -732,45 +732,4 @@ td.note-cell {
   .nav-settings {
   transform: translateY(-55px);
   }
-  
-  .sidebar-bottom {
-  position: fixed;
-  left: 0;
-  bottom: 25px;
-  width: 220px;
-  z-index: 100;
-  }
-
-  .sidebar-settings {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 12px;
-  }
-
-  .sidebar-separator {
-  width: 80%;
-  height: 1px;
-  background: rgba(255,255,255,0.15);
-  margin: 0 auto 15px;
-  }
-
-  .sidebar-profile {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  }
-
-  .sidebar-profile img {
-  width: 40px;
-  height: 40px;
-  object-fit: cover;
-  border-radius: 6px;
-  }
-
-  .sidebar-profile span {
-  color: var(--text);
-  font-size: 14px;
-  font-weight: 600;
-  }
 }
