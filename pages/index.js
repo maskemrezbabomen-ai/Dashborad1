@@ -216,14 +216,11 @@ export default function Dashboard() {
     transform: 'translateY(-90px)',
   }}
 >
-<div
-  className={`nav-item ${view === 'settings' ? 'active' : ''}`}
+<NavItem
+  label="Ayarlar"
+  active={view === 'settings'}
   onClick={() => setView('settings')}
-  style={{ cursor: 'pointer' }}
->
-  <span className="nav-dot"></span>
-  <span>Ayarlar</span>
-</div>
+/>
 
 <div
   style={{
