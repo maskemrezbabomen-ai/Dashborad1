@@ -216,11 +216,13 @@ export default function Dashboard() {
     transform: 'translateY(-100px)',
   }}
 >
-<NavItem
-  label="Ayarlar"
-  active={view === 'settings'}
+<div
+  className={`nav-item ${view === 'settings' ? 'active' : ''}`}
   onClick={() => setView('settings')}
-/>
+>
+  <span className="settings-icon">⚙</span>
+  Ayarlar
+</div>
 
 <div
   style={{
@@ -229,7 +231,7 @@ export default function Dashboard() {
     background: 'rgba(255,255,255,0.15)',
     margin: '-25px auto 0',
     position: 'relative',
-    top: '27px',
+    top: '28px',
   }}
 ></div>
 
