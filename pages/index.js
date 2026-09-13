@@ -194,30 +194,32 @@ export default function Dashboard() {
   }
 
   return (
-<div className="sidebar-brand">
-  <div
-    style={{
-      display: 'flex',
-      alignItems: 'center',
-      gap: '8px',
-    }}
-  >
-    <img
-      src="https://i.hizliresim.com/k0ocgzsw.png"
-      alt="EmreTrades Logo"
-      style={{
-        width: '32px',
-        height: '32px',
-        objectFit: 'contain',
-      }}
-    />
+    <div className="sidebar">
 
-    <div className="name">
-      <span style={{ color: '#ffffff' }}>EMRE</span>
-      <span style={{ color: '#C99A3E' }}>TRADES</span>
-    </div>
-  </div>
-</div>
+      <div className="sidebar-brand">
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+          }}
+        >
+          <img
+            src="https://i.hizliresim.com/k0ocgzsw.png"
+            alt="EmreTrades Logo"
+            style={{
+              width: '32px',
+              height: '32px',
+              objectFit: 'contain',
+            }}
+          />
+
+          <div className="name">
+            <span style={{ color: '#ffffff' }}>EMRE</span>
+            <span style={{ color: '#C99A3E' }}>TRADES</span>
+          </div>
+        </div>
+      </div>
 
 <div className="nav">
   <NavItem label="Dashboard" active={view === 'dashboard'} onClick={() => setView('dashboard')} />
