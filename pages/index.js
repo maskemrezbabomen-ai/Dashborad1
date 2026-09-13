@@ -238,9 +238,22 @@ return (
   }}
 >
   WORKSPACE
+<div
+  className={`nav-item ${view === 'dashboard' ? 'active' : ''}`}
+  onClick={() => setView('dashboard')}
+>
+  <img
+    src="https://img.icons8.com/m_sharp/1200/dashboard-layout.jpg"
+    alt=""
+    style={{
+      width: '18px',
+      height: '18px',
+      objectFit: 'contain',
+      filter: 'invert(1)',
+    }}
+  />
+  <span>Dashboard</span>
 </div>
-<div className="nav">
-  <NavItem label="Dashboard" active={view === 'dashboard'} onClick={() => setView('dashboard')} />
   <NavItem label="Sertifikalar" active={view === 'certificates'} onClick={() => setView('certificates')} />
   <NavItem label="Notlar" active={view === 'journal'} onClick={() => setView('journal')} />
 </div>
