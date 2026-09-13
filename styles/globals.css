@@ -696,10 +696,10 @@ td.note-cell {
   }
   
   .profile-footer {
-  position: absolute;
+  position: fixed !important;
   bottom: 65px !important;
   left: 0;
-  width: 100%;
+  width: 220px;
   padding: 0 12px;
   box-sizing: border-box;
   }
