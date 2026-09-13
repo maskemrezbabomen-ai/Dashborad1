@@ -253,14 +253,14 @@ export default function Dashboard() {
         justifyContent: 'center',
         gap: '9px',
         position: 'relative',
-        top: '30px',
+        top: '60px',
       }}
     >
       <img
         src="https://i.hizliresim.com/xjm282gg.jpg"
         alt="Emre"
         style={{
-          marginLeft: '-40px',
+          marginLeft: '-80px',
           width: '40px',
           height: '40px',
           objectFit: 'cover',
