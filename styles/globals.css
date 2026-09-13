@@ -709,6 +709,8 @@ td.note-cell {
   height: 1px;
   background: var(--border-soft);
   margin-bottom: 12px;
+  position: relative;
+  top: -15px;
   }
 
   .profile {
