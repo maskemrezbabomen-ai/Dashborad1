@@ -749,4 +749,8 @@ td.note-cell {
   .nav-settings {
   transform: translateY(-55px);
   }
+  
+  .field textarea::placeholder {
+  font-family: 'Poppins', sans-serif !important;
+  }
 }
