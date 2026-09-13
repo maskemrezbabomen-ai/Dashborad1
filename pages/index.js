@@ -238,6 +238,7 @@ return (
   }}
 >
   WORKSPACE
+    <div className="nav" style={{ transform: 'translateY(10px)' }}>
 <div
   className={`nav-item ${view === 'dashboard' ? 'active' : ''}`}
   onClick={() => setView('dashboard')}
