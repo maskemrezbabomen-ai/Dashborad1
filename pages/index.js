@@ -262,17 +262,13 @@ return (
 <div
   style={{
     width: '90%',
+    height: '1px',
+    background: 'rgba(255,255,255,0.15)',
     margin: '-25px auto 0',
     position: 'relative',
     top: '28px',
-    color: 'rgba(255,255,255,0.45)',
-    fontSize: '11px',
-    fontWeight: 600,
-    letterSpacing: '1.5px',
   }}
->
-  WORKSPACE
-</div>
+></div>
 
 <div className="profile-footer">
   <div className="profile-line"></div>
