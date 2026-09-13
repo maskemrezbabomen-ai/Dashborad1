@@ -213,7 +213,7 @@ export default function Dashboard() {
 <div
   className="nav"
   style={{
-    transform: 'translateY(600px)',
+    transform: 'translateY(-30px)',
   }}
 >
   <NavItem
