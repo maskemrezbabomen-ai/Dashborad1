@@ -208,79 +208,28 @@ export default function Dashboard() {
   <NavItem label="Notlar" active={view === 'journal'} onClick={() => setView('journal')} />
 </div>
 
-<div style={{ flex: 1 }}></div>
+<div className="sidebar-bottom">
 
-<div
-  className="nav"
-  style={{
-    transform: 'translateY(-55px)',
-  }}
->
-  <NavItem
-    label="Ayarlar"
-    active={view === 'settings'}
-    onClick={() => setView('settings')}
-  />
+  <div className="sidebar-settings">
+    <NavItem
+      label="Ayarlar"
+      active={view === 'settings'}
+      onClick={() => setView('settings')}
+    />
+  </div>
+
+  <div className="sidebar-separator"></div>
+
+  <div className="sidebar-profile">
+    <img
+      src="https://i.hizliresim.com/xjm282gg.jpg"
+      alt="Emre"
+    />
+
+    <span>Emre</span>
+  </div>
+
 </div>
-
-<div
-  style={{
-    width: '80%',
-    height: '1px',
-    background: 'rgba(255,255,255,0.15)',
-    margin: '-25px auto 0',
-    position: 'relative',
-    top: '-27px',
-  }}
-></div>
-
-<div className="profile-footer">
-  <div className="profile-line"></div>
-
-          <div
-            style={{
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              textAlign: 'center',
-            }}
-          >
-           <div
-  style={{
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '9px',
-    position: 'relative',
-    top: '-10px',
-  }}
->
-  <img
-    src="https://i.hizliresim.com/xjm282gg.jpg"
-    alt="Emre"
-    style={{
-      marginLeft: '-100px',
-      width: '40px',
-      height: '40px',
-      objectFit: 'cover',
-      borderRadius: '6px',
-      display: 'block',
-    }}
-  />
-
-  <span
-    style={{
-      color: 'var(--text)',
-      fontSize: '14px',
-      fontWeight: 600,
-    }}
-  >
-    Emre
-  </span>
-</div>
-          </div>
-        </div>
 
       </div>
 
