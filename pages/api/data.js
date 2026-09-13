@@ -49,11 +49,11 @@ export default async function handler(req, res) {
     }
 
     try {
-      const current = (await kv.get('app-data') || DEFAULTS;
+      const current = (await kv.get('app-data')) || DEFAULTS;
 
       current[key] = value;
 
-      await kv.get('app-data')
+      await kv.get('app-data'))
 
       return res.status(200).json({
         ok: true,
