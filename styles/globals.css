@@ -753,4 +753,56 @@ td.note-cell {
   .field textarea::placeholder {
   font-family: 'Poppins', sans-serif !important;
   }
+  /* AYARLAR SAYFASI */
+
+  .settings-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  }
+
+  .settings-grid .full {
+  grid-column: 1 / -1;
+  }
+
+  .settings-grid .field label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  }
+
+  .settings-grid .field input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 44px;
+  padding: 0 13px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: #fff;
+  color: #17202a;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .settings-grid .field input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  .settings-grid + div {
+  margin-top: 18px;
+  }
+
+  @media (max-width: 780px) {
+  .settings-grid {
+  grid-template-columns: 1fr;
+  }
+
+  .settings-grid .full {
+  grid-column: auto;
+  }
 }
