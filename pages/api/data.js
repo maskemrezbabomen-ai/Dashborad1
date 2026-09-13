@@ -51,11 +51,11 @@ export default async function handler(req, res) {
     try {
       const current = (await kv.get('app-data')) || DEFAULTS;
 
-      current[key] = value;
+current[key] = value;
 
-      await kv.get('app-data'))
+await kv.set('app-data', current);
 
-      return res.status(200).json({
+return res.status(200).json({
         ok: true,
       });
     } catch (e) {
