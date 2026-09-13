@@ -221,7 +221,7 @@ export default function Dashboard() {
   onClick={() => setView('settings')}
 >
   <img
-    src="https://img.icons8.com/ios/50/settings.png"
+    src="https://icons8.com/icon/364/settings"
     alt=""
     style={{
       width: '18px',
