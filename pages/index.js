@@ -220,20 +220,15 @@ export default function Dashboard() {
   className={`nav-item ${view === 'settings' ? 'active' : ''}`}
   onClick={() => setView('settings')}
 >
-  <svg
-    width="18"
-    height="18"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.8"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <circle cx="12" cy="12" r="3" />
-    <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.7 1.7-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V22h-2.4v-.2a1.7 1.7 0 0 0-1.03-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.7-1.7.06-.06A1.7 1.7 0 0 0 8.46 17a1.7 1.7 0 0 0-1.56-1.03H6.7v-2.4h.2A1.7 1.7 0 0 0 8.46 12a1.7 1.7 0 0 0-.34-1.88l-.06-.06 1.7-1.7.06.06a1.7 1.7 0 0 0 1.88.34A1.7 1.7 0 0 0 12.73 7.2V7h2.4v.2a1.7 1.7 0 0 0 1.03 1.56 1.7 1.7 0 0 0 1.88-.34l.06-.06 1.7 1.7-.06.06A1.7 1.7 0 0 0 19.4 12c.2.6.76 1 1.4 1h.2v2.4H20.8c-.6 0-1.2-.2-1.4-.4Z" />
-  </svg>
-
+  <img
+    src="https://img.icons8.com/ios/50/settings.png"
+    alt=""
+    style={{
+      width: '18px',
+      height: '18px',
+      objectFit: 'contain',
+    }}
+  />
   <span>Ayarlar</span>
 </div>
 
