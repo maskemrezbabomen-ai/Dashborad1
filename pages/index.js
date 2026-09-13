@@ -198,17 +198,6 @@ return (
     <div className="sidebar">
 
       <div className="sidebar-brand">
-  <div
-  style={{
-    marginTop: '8px',
-    color: 'rgba(255,255,255,0.45)',
-    fontSize: '11px',
-    fontWeight: 600,
-    letterSpacing: '1.5px',
-  }}
->
-  WORKSPACE
-</div>
         <div
           style={{
             display: 'flex',
@@ -239,7 +228,17 @@ return (
 </div>
         </div>
       </div>
-
+<div
+  style={{
+    margin: '-8px 22px 18px',
+    color: 'rgba(255,255,255,0.45)',
+    fontSize: '11px',
+    fontWeight: 600,
+    letterSpacing: '1.5px',
+  }}
+>
+  WORKSPACE
+</div>
 <div className="nav">
   <NavItem label="Dashboard" active={view === 'dashboard'} onClick={() => setView('dashboard')} />
   <NavItem label="Sertifikalar" active={view === 'certificates'} onClick={() => setView('certificates')} />
