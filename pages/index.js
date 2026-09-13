@@ -232,8 +232,13 @@ export default function Dashboard() {
   }}
 ></div>
 
-        <div className="profile-footer">
-          <div className="profile-line"></div>
+       <div
+  className="profile-line"
+  style={{
+    position: 'relative',
+    top: '-30px',
+  }}
+></div>
 
           <div
             style={{
