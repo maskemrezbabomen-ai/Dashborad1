@@ -232,7 +232,7 @@ return (
   style={{
     margin: '18px 22px 18px',
     color: 'rgba(255,255,255,0.45)',
-    fontSize: '9px',
+    fontSize: '10px',
     fontWeight: 600,
     letterSpacing: '1.5px',
   }}
