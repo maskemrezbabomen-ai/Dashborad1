@@ -1,6 +1,4 @@
-import { Redis } from '@upstash/redis';
-
-const redis = Redis.fromEnv();
+import { kv } from '@vercel/kv';
 
 const DEFAULTS = {
   settings: {
@@ -27,7 +25,7 @@ export default async function handler(req, res) {
 
   if (req.method === 'GET') {
     try {
-      const data = (await redis.get('app-data')) || DEFAULTS;
+      const data = (await kv.get('app-data') || DEFAULTS;
 
       return res.status(200).json({
         ...DEFAULTS,
@@ -51,11 +49,11 @@ export default async function handler(req, res) {
     }
 
     try {
-      const current = (await redis.get('app-data')) || DEFAULTS;
+      const current = (await kv.get('app-data') || DEFAULTS;
 
       current[key] = value;
 
-      await redis.set('app-data', current);
+      await kv.get('app-data')
 
       return res.status(200).json({
         ok: true,
