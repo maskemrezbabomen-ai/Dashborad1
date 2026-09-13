@@ -213,7 +213,7 @@ export default function Dashboard() {
 <div
   className="nav"
   style={{
-    transform: 'translateY(-130px)',
+    transform: 'translateY(-100px)',
   }}
 >
 <NavItem
@@ -252,7 +252,7 @@ export default function Dashboard() {
         justifyContent: 'center',
         gap: '9px',
         position: 'relative',
-        top: '52px',
+        top: '35px',
       }}
     >
       <img
