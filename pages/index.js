@@ -226,8 +226,8 @@ export default function Dashboard() {
     style={{
       width: '18px',
       height: '18px',
-      objectFit: 'contain',
-    }}
+      filter: 'brightness(0) invert(1)',
+}}
   />
   <span>Ayarlar</span>
 </div>
