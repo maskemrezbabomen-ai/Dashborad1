@@ -251,7 +251,7 @@ return (
   }}
 >
   <img
-    src="https://img.icons8.com/m_sharp/1200/dashboard-layout.jpg"
+    src="https://img.icons8.com/material-outlined/24/dashboard-layout.png"
     alt=""
     style={{
       width: '16px',
