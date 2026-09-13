@@ -241,15 +241,21 @@ return (
 <div
   className={`nav-item ${view === 'dashboard' ? 'active' : ''}`}
   onClick={() => setView('dashboard')}
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+  }}
 >
   <img
     src="https://img.icons8.com/m_sharp/1200/dashboard-layout.jpg"
     alt=""
     style={{
-      width: '18px',
-      height: '18px',
+      width: '16px',
+      height: '16px',
       objectFit: 'contain',
       filter: 'invert(1)',
+      flexShrink: 0,
     }}
   />
   <span>Dashboard</span>
