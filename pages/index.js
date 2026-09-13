@@ -203,6 +203,7 @@ return (
             display: 'flex',
             alignItems: 'center',
             gap: '8px',
+            transform: 'translateY(10px)',
           }}
         >
           <img
