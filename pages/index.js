@@ -230,9 +230,9 @@ return (
       </div>
 <div
   style={{
-    margin: '10px 22px 18px',
+    margin: '18px 22px 18px',
     color: 'rgba(255,255,255,0.45)',
-    fontSize: '10px',
+    fontSize: '9px',
     fontWeight: 600,
     letterSpacing: '1.5px',
   }}
