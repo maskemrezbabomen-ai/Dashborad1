@@ -250,17 +250,19 @@ return (
     gap: '10px',
   }}
 >
-  <img
-    src="https://img.icons8.com/material-outlined/24/dashboard-layout.png"
-    alt=""
-    style={{
-      width: '16px',
-      height: '16px',
-      objectFit: 'contain',
-      filter: 'invert(1)',
-      flexShrink: 0,
-    }}
-  />
+<img
+  src="https://img.icons8.com/material-outlined/24/dashboard-layout.png"
+  alt=""
+  style={{
+    width: '16px',
+    height: '16px',
+    objectFit: 'contain',
+    flexShrink: 0,
+    filter: view === 'dashboard'
+      ? 'brightness(0) saturate(100%) invert(78%) sepia(45%) saturate(700%) hue-rotate(120deg) brightness(95%) contrast(90%)'
+      : 'brightness(0) invert(1)',
+  }}
+/>
   <span>Dashboard</span>
 </div>
   <NavItem label="Sertifikalar" active={view === 'certificates'} onClick={() => setView('certificates')} />
