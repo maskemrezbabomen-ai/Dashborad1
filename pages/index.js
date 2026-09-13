@@ -216,10 +216,16 @@ return (
             }}
           />
 
-          <div className="name">
-            <span style={{ color: '#ffffff' }}>EMRE</span>
-            <span style={{ color: '#C99A3E' }}>TRADES</span>
-          </div>
+<div
+  className="name"
+  style={{
+    fontSize: '18px',
+    fontWeight: 700,
+  }}
+>
+  <span style={{ color: '#ffffff' }}>EMRE</span>
+  <span style={{ color: '#C99A3E' }}>TRADES</span>
+</div>
         </div>
       </div>
 
