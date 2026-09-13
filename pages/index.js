@@ -224,7 +224,7 @@ return (
   }}
 >
   <span style={{ color: '#ffffff' }}>EMRE</span>
-  <span style={{ color: '#C99A3E' }}>TRADES</span>
+  <span style={{ color: '#4BE0C2' }}>TRADES</span>
 </div>
         </div>
       </div>
