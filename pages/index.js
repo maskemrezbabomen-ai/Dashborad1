@@ -207,7 +207,7 @@ return (
           }}
         >
           <img
-            src="https://i.hizliresim.com/k0ocgzsw.png"
+            src="https://i.hizliresim.com/fcjtywhk.png"
             alt="EmreTrades Logo"
             style={{
               width: '32px',
