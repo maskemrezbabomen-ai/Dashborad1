@@ -105,9 +105,8 @@ body {
   transition: background .15s, color .15s;
 }
 
-.nav-item:hover,
-.nav-item.active {
-  color: #0A1829;
+.nav-item:hover {
+  color: #0A1829 !important;
 }
 
 .nav-item:hover {
