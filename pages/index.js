@@ -213,7 +213,7 @@ export default function Dashboard() {
 <div
   className="nav"
   style={{
-    transform: 'translateY(-100px)',
+    transform: 'translateY(-80px)',
   }}
 >
   <NavItem
@@ -253,14 +253,14 @@ export default function Dashboard() {
         justifyContent: 'center',
         gap: '9px',
         position: 'relative',
-        top: '60px',
+        top: '45px',
       }}
     >
       <img
         src="https://i.hizliresim.com/xjm282gg.jpg"
         alt="Emre"
         style={{
-          marginLeft: '-80px',
+          marginLeft: '-90px',
           width: '40px',
           height: '40px',
           objectFit: 'cover',
