@@ -70,13 +70,6 @@ body {
   box-sizing: border-box;
 }
 
-.profile-line {
-  width: 100%;
-  height: 1px;
-  background: var(--border-soft);
-  margin-bottom: 12px;
-}
-
 .sidebar-brand {
   padding: 0 22px 22px;
   border-bottom: 1px solid var(--border-soft);
