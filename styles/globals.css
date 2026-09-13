@@ -109,6 +109,10 @@ body {
   color: #0A1829 !important;
 }
 
+.nav-item.active:hover {
+  color: #ffffff !important;
+}
+
 .nav-item:hover {
   color: var(--text);
   background: var(--panel-alt);
