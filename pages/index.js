@@ -193,7 +193,8 @@ export default function Dashboard() {
     flash('journal', 'Not silindi.');
   }
 
-  return (
+return (
+  <div className="app">
     <div className="sidebar">
 
       <div className="sidebar-brand">
