@@ -230,7 +230,7 @@ export default function Dashboard() {
     background: 'rgba(255,255,255,0.15)',
     margin: '-25px auto 0',
     position: 'relative',
-    top: '75px',
+    top: '-75px',
   }}
 ></div>
 
@@ -253,7 +253,7 @@ export default function Dashboard() {
         justifyContent: 'center',
         gap: '9px',
         position: 'relative',
-        top: '60px',
+        top: '52px',
       }}
     >
       <img
