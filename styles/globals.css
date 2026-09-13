@@ -103,6 +103,11 @@ body {
   cursor: pointer;
   border-left: 2px solid transparent;
   transition: background .15s, color .15s;
+  .nav-item:hover,
+.nav-item.active,
+.nav-item.active:hover,
+.nav-item:focus {
+  color: #0A1829 !important;
 }
 
 .nav-item:hover {
