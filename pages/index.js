@@ -230,7 +230,7 @@ export default function Dashboard() {
     background: 'rgba(255,255,255,0.15)',
     margin: '-25px auto 0',
     position: 'relative',
-    top: '-30px',
+    top: '-25px',
   }}
 ></div>
 
