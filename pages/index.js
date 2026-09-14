@@ -251,22 +251,27 @@ return (
     color: '#ffffff',
   }}
 >
-  <svg
-    width="16"
-    height="16"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    style={{
-      flexShrink: 0,
-      stroke: view === 'dashboard' ? '#4BE0C2' : '#ffffff',
-    }}
-  >
-    <rect x="3" y="3" width="7" height="7" rx="1.5" strokeWidth="1.8" />
-    <rect x="14" y="3" width="7" height="7" rx="1.5" strokeWidth="1.8" />
-    <rect x="3" y="14" width="7" height="7" rx="1.5" strokeWidth="1.8" />
-    <rect x="14" y="14" width="7" height="7" rx="1.5" strokeWidth="1.8" />
-  </svg>
+<svg
+  width="16"
+  height="16"
+  viewBox="0 0 24 24"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  style={{
+    width: '16px',
+    height: '16px',
+    flexShrink: 0,
+    stroke: view === 'dashboard' ? '#4BE0C2' : '#FFFFFF',
+    strokeWidth: 1.7,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+  }}
+>
+  <rect x="3" y="3" width="7" height="7" rx="1" />
+  <rect x="14" y="3" width="7" height="7" rx="1" />
+  <rect x="3" y="14" width="7" height="7" rx="1" />
+  <rect x="14" y="14" width="7" height="7" rx="1" />
+</svg>
 
   <span>Dashboard</span>
 </div>
@@ -281,18 +286,25 @@ return (
     color: '#ffffff',
   }}
 >
-  <img
-    src="https://img.icons8.com/ios/50/cancer-ribbon.png"
-    alt=""
-    style={{
-      width: '16px',
-      height: '16px',
-      objectFit: 'contain',
-      filter: view === 'certificates'
-        ? 'brightness(0) saturate(100%) invert(79%) sepia(42%) saturate(900%) hue-rotate(115deg) brightness(95%) contrast(90%)'
-        : 'brightness(0) invert(1)',
-    }}
-  />
+<svg
+  width="16"
+  height="16"
+  viewBox="0 0 24 24"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+  style={{
+    width: '16px',
+    height: '16px',
+    flexShrink: 0,
+    stroke: view === 'settings' ? '#4BE0C2' : '#FFFFFF',
+    strokeWidth: 1.7,
+    strokeLinecap: 'round',
+    strokeLinejoin: 'round',
+  }}
+>
+  <circle cx="12" cy="12" r="3" />
+  <path d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-1.41 1.41-.06-.06a1.7 1.7 0 0 0-1.88-.34 1.7 1.7 0 0 0-1.03 1.56V20h-2v-.09a1.7 1.7 0 0 0-1.03-1.56 1.7 1.7 0 0 0-1.88.34l-.06.06-1.41-1.41.06-.06A1.7 1.7 0 0 0 8.4 15a1.7 1.7 0 0 0-1.56-1.03H6v-2h.84A1.7 1.7 0 0 0 8.4 11a1.7 1.7 0 0 0-.34-1.88L8 9.06l1.41-1.41.06.06A1.7 1.7 0 0 0 11.35 8.4 1.7 1.7 0 0 0 12.38 6.84V6h2v.84A1.7 1.7 0 0 0 15.4 8.4a1.7 1.7 0 0 0 1.88-.34l.06-.06 1.41 1.41-.06.06A1.7 1.7 0 0 0 18.4 11a1.7 1.7 0 0 0 1.56 1.03H21v2h-.84A1.7 1.7 0 0 0 19.4 15Z" />
+</svg>
   <span>Certificates</span>
 </div>
   <NavItem label="Notlar" active={view === 'journal'} onClick={() => setView('journal')} />
