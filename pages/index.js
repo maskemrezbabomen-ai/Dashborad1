@@ -98,7 +98,39 @@ setLoaded(true);
   const dailyLossLimitAmt = start * (settings.dailyLossLimit / 100);
   const dLoss = todayLoss();
   const dailyPct = dailyLossLimitAmt > 0 ? Math.min(dLoss / dailyLossLimitAmt, 1) * 100 : 0;
+  const totalTrades = trades.length;
 
+  const winningTrades = trades.filter(
+    (trade) => Number(trade.pnl || 0) > 0
+  ).length;
+
+  const losingTrades = trades.filter(
+    (trade) => Number(trade.pnl || 0) < 0
+  ).length;
+
+  const netTradePnl = trades.reduce(
+    (sum, trade) => sum + Number(trade.pnl || 0),
+    0
+  );
+
+  const winRate =
+    totalTrades > 0
+      ? (winningTrades / totalTrades) * 100
+      : 0;
+
+  const averagePnl =
+    totalTrades > 0
+      ? netTradePnl / totalTrades
+      : 0;
+
+  const averageDiscipline =
+    totalTrades > 0
+      ? trades.reduce(
+          (sum, trade) =>
+            sum + Number(trade.discipline || 0),
+          0
+        ) / totalTrades
+      : 0;
   const totalLossLimitAmt = start * (settings.totalLossLimit / 100);
   const tLoss = Math.max(start - balance, 0);
   const totalPct = totalLossLimitAmt > 0 ? Math.min(tLoss / totalLossLimitAmt, 1) * 100 : 0;
@@ -543,20 +575,99 @@ return (
                 )}
               </div>
 
-              <div className="stat-strip">
-                <div className="stat">
-                  <div className="stat-label">Toplam Getiri</div>
-                  <div className={`stat-value ${totalReturn > 0 ? 'pos' : totalReturn < 0 ? 'neg' : ''}`}>{fmtPct(totalReturn)}</div>
-                </div>
-                <div className="stat">
-                  <div className="stat-label">Zirveden Düşüş</div>
-                  <div className={`stat-value ${drawdown > 0 ? 'neg' : ''}`}>%{drawdown.toFixed(2)}</div>
-                </div>
-                <div className="stat">
-                  <div className="stat-label">İşlem Günü</div>
-                  <div className="stat-value">{entries.length}</div>
-                </div>
-              </div>
+             <div className="stat-strip">
+
+  <div className="stat">
+    <div className="stat-label">Toplam İşlem</div>
+    <div className="stat-value">
+      {totalTrades}
+    </div>
+  </div>
+
+  <div className="stat">
+    <div className="stat-label">Win Rate</div>
+    <div
+      className={`stat-value ${
+        winRate >= 50
+          ? 'pos'
+          : winRate > 0
+          ? 'neg'
+          : ''
+      }`}
+    >
+      %{winRate.toFixed(1)}
+    </div>
+  </div>
+
+  <div className="stat">
+    <div className="stat-label">Net P/L</div>
+    <div
+      className={`stat-value ${
+        netTradePnl > 0
+          ? 'pos'
+          : netTradePnl < 0
+          ? 'neg'
+          : ''
+      }`}
+    >
+      {netTradePnl >= 0 ? '+' : ''}
+      {fmt(netTradePnl)}
+    </div>
+  </div>
+
+</div>
+      <div className="trade-performance">
+
+  <div className="performance-card">
+    <div className="performance-label">
+      Kazanan İşlem
+    </div>
+
+    <div className="performance-value pos">
+      {winningTrades}
+    </div>
+  </div>
+
+  <div className="performance-card">
+    <div className="performance-label">
+      Kaybeden İşlem
+    </div>
+
+    <div className="performance-value neg">
+      {losingTrades}
+    </div>
+  </div>
+
+  <div className="performance-card">
+    <div className="performance-label">
+      Ortalama P/L
+    </div>
+
+    <div
+      className={`performance-value ${
+        averagePnl > 0
+          ? 'pos'
+          : averagePnl < 0
+          ? 'neg'
+          : ''
+      }`}
+    >
+      {averagePnl >= 0 ? '+' : ''}
+      {fmt(averagePnl)}
+    </div>
+  </div>
+
+  <div className="performance-card">
+    <div className="performance-label">
+      Ortalama Disiplin
+    </div>
+
+    <div className="performance-value">
+      {averageDiscipline.toFixed(1)}/10
+    </div>
+  </div>
+
+</div>
 
               <div className="rules">
                 <h2>Kural Takibi</h2>
