@@ -25,7 +25,6 @@ const [journal, setJournal] = useState([]);
 const [trades, setTrades] = useState([]);
 const [status, setStatus] = useState({});
 const [lightbox, setLightbox] = useState(null);
-const [trades, setTrades] = useState([]);
 const [showTradeModal, setShowTradeModal] = useState(false);
 
   useEffect(() => {
@@ -39,13 +38,18 @@ const [showTradeModal, setShowTradeModal] = useState(false);
         setSettings({ ...DEFAULT_SETTINGS, ...data.settings });
         setEntries((data.entries || []).slice().sort((a, b) => a.date.localeCompare(b.date)));
         setCertificates(data.certificates || []);
-setJournal((data.journal || []).slice().sort((a, b) => b.date.localeCompare(a.date)));
-        setTrades(
+setJournal(
+  (data.journal || [])
+    .slice()
+    .sort((a, b) => b.date.localeCompare(a.date))
+);
+
+setTrades(
   (data.trades || [])
     .slice()
     .sort((a, b) => b.date.localeCompare(a.date))
 );
-setTrades((data.trades || []).slice().sort((a, b) => b.date.localeCompare(a.date)));
+
 setLoaded(true);
       });
   }, []);
@@ -799,7 +803,9 @@ function SettingsForm({ settings, onSave, status }) {
       </div>
     </>
   );
-  function TradeModal({ onClose, onSave }) {
+}
+
+function TradeModal({ onClose, onSave }) {
   const [form, setForm] = useState({
     date: today(),
     direction: 'LONG',
