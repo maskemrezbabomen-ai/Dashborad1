@@ -273,7 +273,7 @@ return (
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
-    color: view === 'certificates' ? '#4BE0C2' : '#ffffff',
+    color: '#ffffff',
   }}
 >
   <img
@@ -284,7 +284,7 @@ return (
       height: '16px',
       objectFit: 'contain',
       filter: view === 'certificates'
-        ? 'brightness(0) saturate(100%) invert(9%) sepia(25%) saturate(1200%) hue-rotate(175deg) brightness(95%) contrast(105%)'
+        ? 'brightness(0) saturate(100%) invert(79%) sepia(42%) saturate(900%) hue-rotate(115deg) brightness(95%) contrast(90%)'
         : 'brightness(0) invert(1)',
     }}
   />
