@@ -264,8 +264,29 @@ return (
   }}
 />
   <span>Dashboard</span>
+<div
+  className={`nav-item ${view === 'certificates' ? 'active' : ''}`}
+  onClick={() => setView('certificates')}
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+  }}
+>
+  <img
+    src="https://img.icons8.com/ios/50/cancer-ribbon.png"
+    alt=""
+    style={{
+      width: '16px',
+      height: '16px',
+      objectFit: 'contain',
+      filter: view === 'certificates'
+        ? 'brightness(0) saturate(100%) invert(9%) sepia(25%) saturate(1200%) hue-rotate(175deg) brightness(95%) contrast(105%)'
+        : 'brightness(0) invert(1)',
+    }}
+  />
+  <span>Certificates</span>
 </div>
-  <NavItem label="Sertifikalar" active={view === 'certificates'} onClick={() => setView('certificates')} />
   <NavItem label="Notlar" active={view === 'journal'} onClick={() => setView('journal')} />
 </div>
 
