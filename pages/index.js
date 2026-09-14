@@ -21,9 +21,11 @@ export default function Dashboard() {
   const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [entries, setEntries] = useState([]);
   const [certificates, setCertificates] = useState([]);
-  const [journal, setJournal] = useState([]);
-  const [status, setStatus] = useState({});
-  const [lightbox, setLightbox] = useState(null);
+const [journal, setJournal] = useState([]);
+const [trades, setTrades] = useState([]);
+const [status, setStatus] = useState({});
+const [lightbox, setLightbox] = useState(null);
+const [showTradeModal, setShowTradeModal] = useState(false);
 
   useEffect(() => {
     fetch('/api/data')
@@ -36,8 +38,9 @@ export default function Dashboard() {
         setSettings({ ...DEFAULT_SETTINGS, ...data.settings });
         setEntries((data.entries || []).slice().sort((a, b) => a.date.localeCompare(b.date)));
         setCertificates(data.certificates || []);
-        setJournal((data.journal || []).slice().sort((a, b) => b.date.localeCompare(a.date)));
-        setLoaded(true);
+setJournal((data.journal || []).slice().sort((a, b) => b.date.localeCompare(a.date)));
+setTrades((data.trades || []).slice().sort((a, b) => b.date.localeCompare(a.date)));
+setLoaded(true);
       });
   }, []);
 
@@ -187,11 +190,27 @@ export default function Dashboard() {
   }
 
   async function deleteJournalEntry(id) {
-    const next = journal.filter((e) => e.id !== id);
-    setJournal(next);
-    await persist('journal', next);
-    flash('journal', 'Not silindi.');
+async function addTrade(trade) {
+  const nextTrade = {
+    id: Date.now().toString(),
+    ...trade,
+  };
+
+  const next = [nextTrade, ...trades];
+
+  setTrades(next);
+
+  const ok = await persist('trades', next);
+
+  flash(
+    'trade',
+    ok ? 'İşlem başarıyla kaydedildi.' : 'İşlem kaydedilemedi, tekrar dene.'
+  );
+
+  if (ok) {
+    setShowTradeModal(false);
   }
+}
 
 return (
   <div className="app">
@@ -428,7 +447,44 @@ return (
 </div>
 
 <div className="main">
-        <div className="wrap">
+
+  <div className="topbar">
+
+    <div className="workspace-title">
+      <span>WORKSPACE</span>
+      <span className="workspace-slash">/</span>
+
+      <strong>
+        {view === 'dashboard'
+          ? 'Dashboard'
+          : view === 'certificates'
+          ? 'Certificates'
+          : view === 'journal'
+          ? 'Journal'
+          : 'Settings'}
+      </strong>
+    </div>
+
+    <div className="topbar-actions">
+
+      <div className="market-status">
+        <span className="market-dot"></span>
+        PİYASA AÇIK
+      </div>
+
+      <button
+        className="new-trade-btn"
+        onClick={() => setShowTradeModal(true)}
+      >
+        <span>+</span>
+        Yeni İşlem
+      </button>
+
+    </div>
+
+  </div>
+
+  <div className="wrap">
           {view === 'dashboard' && (
             <>
               <div className="page-title">Dashboard</div>
