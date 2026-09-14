@@ -263,8 +263,8 @@ return (
       : 'brightness(0) invert(1)',
   }}
 />
-  <span>Dashboard</span>
-<div
+<span>Dashboard</span>
+</div>
 
 <div
   className={`nav-item ${view === 'certificates' ? 'active' : ''}`}
