@@ -304,6 +304,12 @@ return (
 <div
   className={`nav-item ${view === 'settings' ? 'active' : ''}`}
   onClick={() => setView('settings')}
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    color: '#ffffff',
+  }}
 >
   <img
     src="https://img.icons8.com/ios/50/settings.png"
@@ -311,10 +317,13 @@ return (
     style={{
       width: '18px',
       height: '18px',
-      filter: 'brightness(0) invert(1)',
-}}
+      objectFit: 'contain',
+      filter: view === 'settings'
+        ? 'brightness(0) saturate(100%) invert(79%) sepia(42%) saturate(900%) hue-rotate(115deg) brightness(95%) contrast(90%)'
+        : 'brightness(0) invert(1)',
+    }}
   />
-  <span>Ayarlar</span>
+  <span>Settings</span>
 </div>
 
 <div
