@@ -251,7 +251,7 @@ return (
   }}
 >
 <img
-  src="https://img.icons8.com/ios/50/sUJRwjfnGwbJ/dashboard-layout.png"
+  src="https://img.icons8.com/windows/32/dashboard-layout.png"
   alt=""
   style={{
     width: '16px',
@@ -259,7 +259,7 @@ return (
     objectFit: 'contain',
     flexShrink: 0,
     filter: view === 'dashboard'
-      ? 'brightness(0) saturate(100%) invert(78%) sepia(45%) saturate(700%) hue-rotate(120deg) brightness(95%) contrast(90%)'
+      ? 'brightness(0) saturate(100%) invert(79%) sepia(42%) saturate(900%) hue-rotate(115deg) brightness(95%) contrast(90%)'
       : 'brightness(0) invert(1)',
   }}
 />
