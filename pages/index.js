@@ -953,6 +953,31 @@ function TradeModal({ onClose, onSave }) {
     }));
   };
 
+    const entryPrice = Number(form.entry);
+  const slPrice = Number(form.sl);
+  const tpPrice = Number(form.tp);
+
+  const hasValidPrices =
+    Number.isFinite(entryPrice) &&
+    Number.isFinite(slPrice) &&
+    Number.isFinite(tpPrice) &&
+    entryPrice > 0 &&
+    slPrice > 0 &&
+    tpPrice > 0;
+
+  let riskDistance = 0;
+  let rewardDistance = 0;
+  let rr = 0;
+
+  if (hasValidPrices) {
+    riskDistance = Math.abs(entryPrice - slPrice);
+    rewardDistance = Math.abs(tpPrice - entryPrice);
+
+    if (riskDistance > 0) {
+      rr = rewardDistance / riskDistance;
+    }
+  }
+
   function handleSave() {
     if (!form.date) {
       alert('Lütfen tarih seç.');
@@ -1142,7 +1167,32 @@ function TradeModal({ onClose, onSave }) {
             </div>
 
           </div>
+{hasValidPrices && riskDistance > 0 && (
+            <div className="trade-calculation-box">
 
+              <div className="trade-calculation-item">
+                <span>SL Mesafesi</span>
+                <strong>
+                  {riskDistance.toFixed(2)}
+                </strong>
+              </div>
+
+              <div className="trade-calculation-item">
+                <span>TP Mesafesi</span>
+                <strong>
+                  {rewardDistance.toFixed(2)}
+                </strong>
+              </div>
+
+              <div className="trade-calculation-item highlight">
+                <span>Risk / Ödül</span>
+                <strong>
+                  1:{rr.toFixed(2)}
+                </strong>
+              </div>
+
+            </div>
+          )}
           <div className="trade-grid three">
 
             <div className="trade-field">
