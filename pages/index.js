@@ -261,16 +261,40 @@ return (
     width: '16px',
     height: '16px',
     flexShrink: 0,
-    stroke: view === 'dashboard' ? '#4BE0C2' : '#FFFFFF',
-    strokeWidth: 1.7,
-    strokeLinecap: 'round',
-    strokeLinejoin: 'round',
   }}
 >
-  <rect x="3" y="3" width="7" height="7" rx="1" />
-  <rect x="14" y="3" width="7" height="7" rx="1" />
-  <rect x="3" y="14" width="7" height="7" rx="1" />
-  <rect x="14" y="14" width="7" height="7" rx="1" />
+  <rect
+    x="3"
+    y="3"
+    width="9"
+    height="13"
+    rx="2"
+    fill={view === 'dashboard' ? '#4BE0C2' : '#FFFFFF'}
+  />
+  <rect
+    x="14"
+    y="3"
+    width="7"
+    height="6"
+    rx="2"
+    fill={view === 'dashboard' ? '#4BE0C2' : '#FFFFFF'}
+  />
+  <rect
+    x="14"
+    y="11"
+    width="7"
+    height="10"
+    rx="2"
+    fill={view === 'dashboard' ? '#4BE0C2' : '#FFFFFF'}
+  />
+  <rect
+    x="3"
+    y="18"
+    width="9"
+    height="3"
+    rx="1.5"
+    fill={view === 'dashboard' ? '#4BE0C2' : '#FFFFFF'}
+  />
 </svg>
 
   <span>Dashboard</span>
