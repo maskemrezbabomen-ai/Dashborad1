@@ -860,4 +860,49 @@ td.note-cell {
   .trade-performance {
     grid-template-columns: 1fr;
   }
+
+  .trade-calculation-box {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: -4px;
+  margin-bottom: 4px;
+}
+
+.trade-calculation-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 11px 13px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+}
+
+.trade-calculation-item span {
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.45);
+  font-weight: 600;
+}
+
+.trade-calculation-item strong {
+  font-size: 15px;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.trade-calculation-item.highlight {
+  border-color: rgba(75, 224, 194, 0.25);
+  background: rgba(75, 224, 194, 0.06);
+}
+
+.trade-calculation-item.highlight strong {
+  color: #4BE0C2;
+}
+
+@media (max-width: 600px) {
+  .trade-calculation-box {
+    grid-template-columns: 1fr;
+  }
+}
 }
