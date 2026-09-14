@@ -265,6 +265,8 @@ return (
 />
   <span>Dashboard</span>
 <div
+
+<div
   className={`nav-item ${view === 'certificates' ? 'active' : ''}`}
   onClick={() => setView('certificates')}
   style={{
