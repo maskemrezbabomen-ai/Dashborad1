@@ -248,22 +248,27 @@ return (
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
+    color: '#ffffff',
   }}
 >
-<img
-  src="https://img.icons8.com/ios-filled/50/dashboard-layout.png"
-  alt=""
-  style={{
-    width: '16px',
-    height: '16px',
-    objectFit: 'contain',
-    flexShrink: 0,
-    filter: view === 'dashboard'
-      ? 'brightness(0) saturate(100%) invert(79%) sepia(42%) saturate(900%) hue-rotate(115deg) brightness(95%) contrast(90%)'
-      : 'brightness(0) invert(1)',
-  }}
-/>
-<span>Dashboard</span>
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    style={{
+      flexShrink: 0,
+      stroke: view === 'dashboard' ? '#4BE0C2' : '#ffffff',
+    }}
+  >
+    <rect x="3" y="3" width="7" height="7" rx="1.5" strokeWidth="1.8" />
+    <rect x="14" y="3" width="7" height="7" rx="1.5" strokeWidth="1.8" />
+    <rect x="3" y="14" width="7" height="7" rx="1.5" strokeWidth="1.8" />
+    <rect x="14" y="14" width="7" height="7" rx="1.5" strokeWidth="1.8" />
+  </svg>
+
+  <span>Dashboard</span>
 </div>
 
 <div
