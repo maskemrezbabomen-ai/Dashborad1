@@ -808,6 +808,7 @@ td.note-cell {
   .settings-grid {
     grid-template-columns: 1fr;
   }
+}
 
   .settings-grid .full {
     grid-column: auto;
@@ -820,14 +821,14 @@ td.note-cell {
 }
 
 .performance-card {
-  background: rgba(255,255,255,0.025);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   padding: 16px 18px;
 }
 
 .performance-label {
-  color: rgba(255,255,255,0.45);
+  color: rgba(255, 255, 255, 0.45);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.5px;
