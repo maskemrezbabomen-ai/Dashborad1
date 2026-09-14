@@ -812,5 +812,50 @@ td.note-cell {
   .settings-grid .full {
     grid-column: auto;
   }
+.trade-performance {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 24px;
 }
+
+.performance-card {
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 16px 18px;
+}
+
+.performance-label {
+  color: rgba(255,255,255,0.45);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.performance-value {
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.performance-value.pos {
+  color: #4BE0C2;
+}
+
+.performance-value.neg {
+  color: #ff6b6b;
+}
+
+@media (max-width: 900px) {
+  .trade-performance {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .trade-performance {
+    grid-template-columns: 1fr;
+  }
 }
