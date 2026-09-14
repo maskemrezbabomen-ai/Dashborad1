@@ -273,6 +273,7 @@ return (
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
+    color: view === 'certificates' ? '#0A1829' : '#ffffff',
   }}
 >
   <img
