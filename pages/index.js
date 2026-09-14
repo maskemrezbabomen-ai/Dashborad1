@@ -332,8 +332,8 @@ return (
     src="https://img.icons8.com/ios/50/settings.png"
     alt=""
     style={{
-      width: '18px',
-      height: '18px',
+      width: '16px',
+      height: '16px',
       objectFit: 'contain',
       filter: view === 'settings'
         ? 'brightness(0) saturate(100%) invert(79%) sepia(42%) saturate(900%) hue-rotate(115deg) brightness(95%) contrast(90%)'
