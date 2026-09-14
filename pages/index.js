@@ -25,6 +25,7 @@ const [journal, setJournal] = useState([]);
 const [trades, setTrades] = useState([]);
 const [status, setStatus] = useState({});
 const [lightbox, setLightbox] = useState(null);
+const [trades, setTrades] = useState([]);
 const [showTradeModal, setShowTradeModal] = useState(false);
 
   useEffect(() => {
@@ -39,6 +40,11 @@ const [showTradeModal, setShowTradeModal] = useState(false);
         setEntries((data.entries || []).slice().sort((a, b) => a.date.localeCompare(b.date)));
         setCertificates(data.certificates || []);
 setJournal((data.journal || []).slice().sort((a, b) => b.date.localeCompare(a.date)));
+        setTrades(
+  (data.trades || [])
+    .slice()
+    .sort((a, b) => b.date.localeCompare(a.date))
+);
 setTrades((data.trades || []).slice().sort((a, b) => b.date.localeCompare(a.date)));
 setLoaded(true);
       });
@@ -189,7 +195,12 @@ setLoaded(true);
     flash('journal', ok ? 'Not kaydedildi.' : 'Kaydedilemedi, tekrar dene.');
   }
 
-  async function deleteJournalEntry(id) {
+ async function deleteJournalEntry(id) {
+  const next = journal.filter((e) => e.id !== id);
+  setJournal(next);
+  await persist('journal', next);
+  flash('journal', 'Not silindi.');
+}
 async function addTrade(trade) {
   const nextTrade = {
     id: Date.now().toString(),
@@ -204,7 +215,9 @@ async function addTrade(trade) {
 
   flash(
     'trade',
-    ok ? 'İşlem başarıyla kaydedildi.' : 'İşlem kaydedilemedi, tekrar dene.'
+    ok
+      ? 'İşlem başarıyla kaydedildi.'
+      : 'İşlem kaydedilemedi, tekrar dene.'
   );
 
   if (ok) {
@@ -473,6 +486,7 @@ return (
       </div>
 
       <button
+        type="button"
         className="new-trade-btn"
         onClick={() => setShowTradeModal(true)}
       >
@@ -785,4 +799,362 @@ function SettingsForm({ settings, onSave, status }) {
       </div>
     </>
   );
+  function TradeModal({ onClose, onSave }) {
+  const [form, setForm] = useState({
+    date: today(),
+    direction: 'LONG',
+    pair: '',
+    setup: '',
+    entry: '',
+    sl: '',
+    tp: '',
+    position: '',
+    pnl: '',
+    emotion: '',
+    commission: '',
+    discipline: 5,
+    note: '',
+  });
+
+  const set = (key, value) => {
+    setForm((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
+  function handleSave() {
+    if (!form.date) {
+      alert('Lütfen tarih seç.');
+      return;
+    }
+
+    if (!form.pair.trim()) {
+      alert('Lütfen parite gir.');
+      return;
+    }
+
+    if (!form.setup.trim()) {
+      alert('Lütfen setup gir.');
+      return;
+    }
+
+    onSave({
+      ...form,
+      pair: form.pair.trim().toUpperCase(),
+      setup: form.setup.trim(),
+      entry: form.entry === '' ? null : Number(form.entry),
+      sl: form.sl === '' ? null : Number(form.sl),
+      tp: form.tp === '' ? null : Number(form.tp),
+      position: form.position === '' ? null : Number(form.position),
+      pnl: form.pnl === '' ? 0 : Number(form.pnl),
+      commission:
+        form.commission === '' ? 0 : Number(form.commission),
+      discipline: Number(form.discipline),
+    });
+  }
+
+  return (
+    <div
+      className="trade-modal-overlay"
+      onMouseDown={onClose}
+    >
+      <div
+        className="trade-modal"
+        onMouseDown={(e) => e.stopPropagation()}
+      >
+
+        <div className="trade-modal-header">
+          <div>
+            <div className="trade-modal-title">
+              Yeni İşlem
+            </div>
+
+            <div className="trade-modal-subtitle">
+              İşlem detaylarını kaydet
+            </div>
+          </div>
+
+          <button
+            type="button"
+            className="trade-modal-close"
+            onClick={onClose}
+          >
+            ×
+          </button>
+        </div>
+
+        <div className="trade-form">
+
+          <div className="trade-field">
+            <label>Tarih</label>
+
+            <input
+              type="date"
+              value={form.date}
+              onChange={(e) =>
+                set('date', e.target.value)
+              }
+            />
+          </div>
+
+          <div className="trade-field">
+            <label>Yön</label>
+
+            <div className="direction-buttons">
+
+              <button
+                type="button"
+                className={`direction-btn long ${
+                  form.direction === 'LONG'
+                    ? 'selected'
+                    : ''
+                }`}
+                onClick={() =>
+                  set('direction', 'LONG')
+                }
+              >
+                LONG
+              </button>
+
+              <button
+                type="button"
+                className={`direction-btn short ${
+                  form.direction === 'SHORT'
+                    ? 'selected'
+                    : ''
+                }`}
+                onClick={() =>
+                  set('direction', 'SHORT')
+                }
+              >
+                SHORT
+              </button>
+
+            </div>
+          </div>
+
+          <div className="trade-grid two">
+
+            <div className="trade-field">
+              <label>Parite</label>
+
+              <input
+                type="text"
+                placeholder="XAUUSD"
+                value={form.pair}
+                onChange={(e) =>
+                  set(
+                    'pair',
+                    e.target.value.toUpperCase()
+                  )
+                }
+              />
+            </div>
+
+            <div className="trade-field">
+              <label>Setup</label>
+
+              <input
+                type="text"
+                placeholder="FVG + MSS"
+                value={form.setup}
+                onChange={(e) =>
+                  set('setup', e.target.value)
+                }
+              />
+            </div>
+
+          </div>
+
+          <div className="trade-grid three">
+
+            <div className="trade-field">
+              <label>Entry</label>
+
+              <input
+                type="number"
+                step="any"
+                placeholder="3650.25"
+                value={form.entry}
+                onChange={(e) =>
+                  set('entry', e.target.value)
+                }
+              />
+            </div>
+
+            <div className="trade-field">
+              <label>SL</label>
+
+              <input
+                type="number"
+                step="any"
+                placeholder="3645.00"
+                value={form.sl}
+                onChange={(e) =>
+                  set('sl', e.target.value)
+                }
+              />
+            </div>
+
+            <div className="trade-field">
+              <label>TP</label>
+
+              <input
+                type="number"
+                step="any"
+                placeholder="3665.00"
+                value={form.tp}
+                onChange={(e) =>
+                  set('tp', e.target.value)
+                }
+              />
+            </div>
+
+          </div>
+
+          <div className="trade-grid three">
+
+            <div className="trade-field">
+              <label>Pozisyon</label>
+
+              <input
+                type="number"
+                step="any"
+                placeholder="0.50"
+                value={form.position}
+                onChange={(e) =>
+                  set('position', e.target.value)
+                }
+              />
+
+              <small>Lot</small>
+            </div>
+
+            <div className="trade-field">
+              <label>Kâr / Zarar</label>
+
+              <input
+                type="number"
+                step="0.01"
+                placeholder="+125.00"
+                value={form.pnl}
+                onChange={(e) =>
+                  set('pnl', e.target.value)
+                }
+              />
+            </div>
+
+            <div className="trade-field">
+              <label>Komisyon</label>
+
+              <input
+                type="number"
+                step="0.01"
+                placeholder="2.50"
+                value={form.commission}
+                onChange={(e) =>
+                  set('commission', e.target.value)
+                }
+              />
+            </div>
+
+          </div>
+
+          <div className="trade-field">
+            <label>Duygu</label>
+
+            <select
+              value={form.emotion}
+              onChange={(e) =>
+                set('emotion', e.target.value)
+              }
+            >
+              <option value="">Seçiniz</option>
+              <option value="Sakin">Sakin</option>
+              <option value="Kendinden Emin">
+                Kendinden Emin
+              </option>
+              <option value="Kararsız">Kararsız</option>
+              <option value="FOMO">FOMO</option>
+              <option value="Hırslı">Hırslı</option>
+              <option value="Korku">Korku</option>
+              <option value="Sabırsız">Sabırsız</option>
+            </select>
+          </div>
+
+          <div className="trade-field">
+
+            <label>
+              Disiplin Skoru
+
+              <span className="discipline-value">
+                {form.discipline}/10
+              </span>
+            </label>
+
+            <div className="discipline-buttons">
+
+              {[1,2,3,4,5,6,7,8,9,10].map(
+                (number) => (
+                  <button
+                    key={number}
+                    type="button"
+                    className={
+                      form.discipline === number
+                        ? 'discipline-active'
+                        : ''
+                    }
+                    onClick={() =>
+                      set('discipline', number)
+                    }
+                  >
+                    {number}
+                  </button>
+                )
+              )}
+
+            </div>
+          </div>
+
+          <div className="trade-field">
+
+            <label>İşlem Notu</label>
+
+            <textarea
+              rows="5"
+              placeholder="İşleme neden girdin, neyi doğru yaptın, neyi yanlış yaptın?"
+              value={form.note}
+              onChange={(e) =>
+                set('note', e.target.value)
+              }
+            />
+
+          </div>
+
+        </div>
+
+        <div className="trade-modal-footer">
+
+          <button
+            type="button"
+            className="trade-cancel-btn"
+            onClick={onClose}
+          >
+            Vazgeç
+          </button>
+
+          <button
+            type="button"
+            className="trade-save-btn"
+            onClick={handleSave}
+          >
+            İşlemi Kaydet
+          </button>
+
+        </div>
+
+      </div>
+    </div>
+  );  
 }
