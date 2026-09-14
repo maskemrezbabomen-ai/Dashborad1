@@ -269,7 +269,8 @@ return (
     width="9"
     height="13"
     rx="2"
-    fill={view === 'dashboard' ? '#4BE0C2' : '#FFFFFF'}
+    stroke={view === 'dashboard' ? '#4BE0C2' : '#FFFFFF'}
+    strokeWidth="1.7"
   />
   <rect
     x="14"
@@ -277,7 +278,8 @@ return (
     width="7"
     height="6"
     rx="2"
-    fill={view === 'dashboard' ? '#4BE0C2' : '#FFFFFF'}
+    stroke={view === 'dashboard' ? '#4BE0C2' : '#FFFFFF'}
+    strokeWidth="1.7"
   />
   <rect
     x="14"
@@ -285,7 +287,8 @@ return (
     width="7"
     height="10"
     rx="2"
-    fill={view === 'dashboard' ? '#4BE0C2' : '#FFFFFF'}
+    stroke={view === 'dashboard' ? '#4BE0C2' : '#FFFFFF'}
+    strokeWidth="1.7"
   />
   <rect
     x="3"
@@ -293,7 +296,8 @@ return (
     width="9"
     height="3"
     rx="1.5"
-    fill={view === 'dashboard' ? '#4BE0C2' : '#FFFFFF'}
+    stroke={view === 'dashboard' ? '#4BE0C2' : '#FFFFFF'}
+    strokeWidth="1.7"
   />
 </svg>
 
