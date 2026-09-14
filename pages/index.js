@@ -640,11 +640,24 @@ return (
             </>
           )}
 
-          {view === 'settings' && (
-            <SettingsForm settings={settings} onSave={saveSettings} status={status.settings} />
-          )}
-        </div>
-      </div>
+{view === 'settings' && (
+  <SettingsForm
+    settings={settings}
+    onSave={saveSettings}
+    status={status.settings}
+  />
+)}
+
+</div>
+</div>
+
+{showTradeModal && (
+  <TradeModal
+    onClose={() => setShowTradeModal(false)}
+    onSave={addTrade}
+  />
+)}
+
 
       {lightbox && (
         <div className="overlay" onClick={() => setLightbox(null)}>
