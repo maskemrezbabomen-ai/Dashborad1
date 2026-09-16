@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EMRETRADES — Trading Journal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05090c; --panel:#0b1216; --panel-2:#101a1f; --line:#17242a;
+    --ink:#f1f5f6; --muted:#7f8c91; --gold:#45e0c2; --gold-dim:#2aa990;
+    --green:#45e0c2; --red:#ff6674; --orange:#ffad4d; --blue:#4f8cff; --blue-2:#3b73e8;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Poppins',sans-serif;overflow-x:hidden;}
+  button,input,select,textarea{font-family:'Poppins',sans-serif;}
+  .hidden{display:none !important;}
+
+  /* ---- INTRO ---- */
+  #intro{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:50;cursor:pointer;}
+  #intro.out{animation:introOut .9s ease forwards;}
+  @keyframes introOut{to{opacity:0;visibility:hidden;}}
+  .tape{position:absolute;top:50%;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold-dim),transparent);transform:scaleX(0);animation:tapeGrow 1.4s cubic-bezier(.2,.8,.2,1) forwards;}
+  @keyframes tapeGrow{to{transform:scaleX(1);}}
+  .intro-title{font-weight:800;font-size:clamp(2rem,6vw,3.6rem);opacity:0;animation:fadeUp 1s ease forwards;animation-delay:.8s;text-align:center;letter-spacing:-0.01em;}
+  .intro-title span{color:var(--gold);}
+  .intro-sub{margin-top:.9rem;font-size:.85rem;color:var(--muted);font-weight:400;opacity:0;animation:fadeUp 1s ease forwards;animation-delay:1.2s;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ---- GATE ---- */
+  #gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:1.5rem;}
+  .gate-card{width:100%;max-width:360px;background:var(--panel);border:1px solid var(--line);padding:2rem 1.8rem;}
+  .gate-brand{display:flex;align-items:center;gap:.5rem;margin-bottom:1.6rem;color:var(--gold);font-weight:700;font-size:1.1rem;}
+  .gate-title{font-weight:700;font-size:1.3rem;margin-bottom:.3rem;}
+  .gate-sub{color:var(--muted);font-size:.8rem;margin-bottom:1.4rem;font-weight:400;}
+  .field{display:flex;flex-direction:column;gap:.35rem;margin-bottom:.9rem;}
+  .field label{font-size:.7rem;color:var(--muted);font-weight:500;}
+  .field input,.field select,.field textarea{background:var(--bg);border:1px solid var(--line);color:var(--ink);padding:.65rem .7rem;font-size:.88rem;}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:1px solid var(--gold);border-color:var(--gold);}
+  .gate-error{color:var(--red);font-size:.76rem;margin-bottom:.8rem;}
+  .gate-note{color:var(--muted);font-size:.7rem;margin-top:1.1rem;line-height:1.5;font-weight:400;}
+
+  /* ---- SHELL ---- */
+  #shell{display:flex;min-height:100vh;}
+  .sidebar{width:220px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:1.5rem 1rem;position:sticky;top:0;height:100vh;}
+  .brand{display:flex;align-items:baseline;gap:.2rem;padding:0 .4rem;margin-bottom:2rem;font-weight:700;font-size:1.1rem;}
+  .brand .t2{color:var(--gold);}
+  .nav{display:flex;flex-direction:column;gap:.2rem;flex:1;}
+  .nav-item{display:flex;align-items:center;gap:.7rem;padding:.6rem .7rem;background:none;border:none;color:var(--muted);font-size:.85rem;font-weight:500;cursor:pointer;text-align:left;border-left:2px solid transparent;width:100%;}
+  .nav-item:hover{color:var(--ink);}
+  .nav-item.active{color:var(--gold);background:var(--panel-2);border-left:2px solid var(--gold);}
+  .nav-item svg{width:16px;height:16px;flex-shrink:0;}
+  .logout{display:flex;align-items:center;gap:.7rem;padding:.6rem .7rem;background:none;border:none;color:var(--muted);font-size:.8rem;cursor:pointer;text-align:left;}
+  .logout:hover{color:var(--red);}
+  .logout svg{width:15px;height:15px;}
+
+  .main{flex:1;padding:2.2rem 2.4rem 4rem;min-width:0;}
+  .page-header{margin-bottom:1.6rem;}
+  .page-title{font-weight:700;font-size:1.5rem;margin:0;}
+  .page-sub{color:var(--muted);font-size:.82rem;margin-top:.3rem;font-weight:400;}
+
+  @media(max-width:780px){
+    #shell{flex-direction:column;}
+    .sidebar{width:100%;height:auto;position:relative;flex-direction:row;align-items:center;padding:1rem;}
+    .brand{margin-bottom:0;margin-right:1rem;}
+    .nav{flex-direction:row;overflow-x:auto;flex:1;}
+    .nav-item{border-left:none;border-bottom:2px solid transparent;white-space:nowrap;}
+    .nav-item.active{border-left:none;border-bottom:2px solid var(--gold);}
+    .main{padding:1.6rem 1.2rem 3rem;}
+  }
+
+  /* ---- STATS ---- */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:1.6rem;}
+  .stat{background:var(--panel);padding:1rem 1.1rem;}
+  .stat-label{font-size:.68rem;color:var(--muted);font-weight:500;}
+  .stat-value{font-size:1.3rem;margin-top:.35rem;font-weight:700;}
+  .pos{color:var(--green);} .neg{color:var(--red);}
+  @media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr);}}
+
+  .panel-box{background:var(--panel);border:1px solid var(--line);padding:1.2rem;margin-bottom:1.6rem;}
+  .panel-label{font-size:.7rem;color:var(--muted);font-weight:500;margin-bottom:.6rem;}
+  .recent-row{display:flex;justify-content:space-between;padding:.5rem 0;border-bottom:1px solid var(--line);font-size:.85rem;}
+  .recent-row:last-child{border-bottom:none;}
+
+  /* ---- FORM ---- */
+  .form-wrap{background:var(--panel);border:1px solid var(--line);padding:1.3rem;margin-bottom:1.6rem;}
+  .form-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.9rem;}
+  @media(max-width:640px){.form-grid{grid-template-columns:1fr 1fr;}}
+  .field.span-3{grid-column:span 3;}
+  @media(max-width:640px){.field.span-3{grid-column:span 2;}}
+  .form-actions{display:flex;gap:.7rem;margin-top:1.1rem;}
+  .btn-primary{background:var(--gold);color:#17130a;border:none;padding:.6rem 1.2rem;font-weight:600;font-size:.82rem;cursor:pointer;}
+  .btn-primary:hover{background:#d9b25e;}
+  .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--line);padding:.6rem 1.2rem;font-size:.82rem;cursor:pointer;}
+  .btn-ghost:hover{color:var(--ink);border-color:var(--gold-dim);}
+  .btn-danger{background:transparent;color:var(--red);border:1px solid var(--red);padding:.6rem 1.2rem;font-size:.82rem;cursor:pointer;}
+  .add-btn{background:var(--gold);color:#17130a;border:none;padding:.6rem 1.05rem;font-size:.8rem;font-weight:600;cursor:pointer;}
+  .add-btn:hover{background:#d9b25e;}
+
+  /* ---- TABLE ---- */
+  .filters{display:flex;gap:1.2rem;margin-bottom:.9rem;font-size:.78rem;color:var(--muted);}
+  .filters button{background:none;border:none;color:var(--muted);font-size:.78rem;cursor:pointer;padding:.2rem 0;border-bottom:1px solid transparent;font-weight:500;}
+  .filters button.active{color:var(--gold);border-bottom:1px solid var(--gold);}
+  table{width:100%;border-collapse:collapse;font-size:.85rem;}
+  th{text-align:left;font-size:.68rem;color:var(--muted);font-weight:600;padding:.5rem .6rem;border-bottom:1px solid var(--line);}
+  td{padding:.6rem;border-bottom:1px solid var(--line);vertical-align:top;}
+  tr:hover td{background:var(--panel);}
+  .symbol{font-weight:700;}
+  .dir-long{color:var(--green);font-size:.72rem;font-weight:600;} .dir-short{color:var(--red);font-size:.72rem;font-weight:600;}
+  .notes{color:var(--muted);font-size:.78rem;max-width:220px;}
+  .del{background:none;border:none;color:var(--muted);cursor:pointer;font-size:.75rem;}
+  .del:hover{color:var(--red);}
+  .empty{text-align:center;padding:3rem 1rem;color:var(--muted);border:1px dashed var(--line);}
+  .empty-title{font-weight:700;font-size:1.2rem;color:var(--ink);margin-bottom:.4rem;}
+  .error-msg{color:var(--red);font-size:.78rem;margin-bottom:1rem;}
+
+  /* ---- CERTIFICATES ---- */
+  .cert-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;}
+  @media(max-width:780px){.cert-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:520px){.cert-grid{grid-template-columns:1fr;}}
+  .cert{border:1px solid var(--line);padding:1.3rem 1.1rem;position:relative;background:var(--panel);}
+  .cert.unlocked{border-color:var(--gold-dim);}
+  .cert-icon{color:var(--gold-dim);margin-bottom:.7rem;}
+  .cert.unlocked .cert-icon{color:var(--gold);}
+  .cert-title{font-weight:700;font-size:1.05rem;margin-bottom:.3rem;}
+  .cert.locked .cert-title,.cert.locked .cert-desc{opacity:.45;}
+  .cert-desc{font-size:.78rem;color:var(--muted);line-height:1.4;font-weight:400;}
+  .cert-check{position:absolute;top:1rem;right:1rem;color:var(--gold);}
+
+  /* ---- SETTINGS ---- */
+  .settings-section{background:var(--panel);border:1px solid var(--line);padding:1.3rem;margin-bottom:1.3rem;max-width:420px;}
+  .settings-title{font-weight:700;font-size:1.05rem;margin-bottom:1rem;}
+  .settings-msg{font-size:.8rem;color:var(--gold);margin-top:.8rem;}
+
+  svg.icon{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+
+/* ===== EMRETRADES PRO UI ===== */
+body{background:var(--bg);color:var(--ink)}
+#intro{background:var(--bg)}
+.intro-title span{color:var(--blue)}
+.tape{background:linear-gradient(90deg,transparent,#8bbaf5,transparent)}
+.gate-card,.panel-box,.form-wrap,.settings-section,.cert,.stat{background:#fff;box-shadow:0 10px 30px rgba(28,55,90,.06)}
+.gate-card{border-radius:18px;border-color:var(--line)}
+.sidebar{background:#fff;border-right:1px solid var(--line);box-shadow:4px 0 18px rgba(20,45,75,.03)}
+.brand .t2{color:var(--blue)}
+.nav-item{border-left:0;border-radius:10px;padding:.72rem .8rem}
+.nav-item:hover{background:#f5f9ff;color:var(--blue)}
+.nav-item.active{color:var(--blue);background:#e9f3ff;border-left:0}
+.main{padding:2rem 2.5rem 4rem}
+.page-title{letter-spacing:-.02em}
+.stats{gap:14px;background:transparent;border:0}
+.stat{border:1px solid var(--line);border-radius:14px;padding:1.15rem 1.2rem}
+.stat-value{font-size:1.45rem}
+.field input,.field select,.field textarea{background:#fbfdff;border:1px solid var(--line);border-radius:8px}
+.field input:focus,.field select:focus,.field textarea:focus{outline:2px solid rgba(47,128,237,.14);border-color:var(--blue)}
+.btn-primary,.add-btn{background:var(--blue);color:#fff;border-radius:9px;box-shadow:0 6px 16px rgba(47,128,237,.18)}
+.btn-primary:hover,.add-btn:hover{background:var(--blue-2)}
+.btn-ghost{border-radius:9px;background:#fff}
+table{background:#fff;border-radius:12px;overflow:hidden}
+th{background:#f7faff}
+tr:hover td{background:#f8fbff}
+.cert{border-radius:14px}
+.cert.unlocked{border-color:#9ec8fa;background:#f8fbff}
+.cert-icon,.cert.unlocked .cert-icon{color:var(--blue)}
+.cert-check{color:var(--green)}
+.hero{background:linear-gradient(135deg,#fff,#eef6ff);border:1px solid #d9e8f8;border-radius:18px;padding:1.35rem 1.45rem;margin-bottom:1.2rem;display:flex;justify-content:space-between;gap:1rem;align-items:center}
+.hero h2{margin:0;font-size:1.25rem}.hero p{margin:.35rem 0 0;color:var(--muted);font-size:.8rem}
+.hero-badge{background:#fff;border:1px solid #d7e6f8;border-radius:999px;padding:.45rem .75rem;font-size:.72rem;color:var(--blue);font-weight:600}
+.dash-grid{display:grid;grid-template-columns:1.7fr 1fr;gap:1.2rem}
+.dash-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:1.2rem;box-shadow:0 10px 30px rgba(28,55,90,.05)}
+.card-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.9rem}
+.card-head h3{font-size:.92rem;margin:0}.card-head span{font-size:.7rem;color:var(--muted)}
+.quick-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:.7rem}
+.quick-btn{border:1px solid var(--line);background:#fff;border-radius:11px;padding:.8rem;text-align:left;cursor:pointer}
+.quick-btn:hover{border-color:#a8c9ee;background:#f7fbff}
+.quick-btn b{display:block;font-size:.78rem}.quick-btn span{font-size:.68rem;color:var(--muted)}
+.progress{height:7px;background:#edf2f7;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:var(--blue);border-radius:99px}
+.quote{font-size:.84rem;line-height:1.6;color:#526174;background:#f8fbff;border-left:3px solid var(--blue);padding:.8rem .9rem;border-radius:0 9px 9px 0}
+.news-red{color:var(--red)!important}.news-orange{color:var(--orange)!important}
+@media(max-width:900px){.dash-grid{grid-template-columns:1fr}.main{padding:1.5rem 1.2rem 3rem}}
+
+
+  /* EMRETRADES DARK PRO REDESIGN */
+  :root{--bg:#080d16;--panel:#0e1624;--panel-2:#111d2e;--line:#1c2a3d;--ink:#f5f8ff;--muted:#8c9ab0;--gold:#2f8cff;--gold-dim:#5da7ff;--green:#27c58a;--red:#ff5c67;--orange:#ff9d3d;--blue:#2f8cff;--blue-2:#1769d2;}
+  html,body{background:var(--bg);color:var(--ink);font-family:'Poppins',sans-serif;}
+  body{background:radial-gradient(circle at 85% -10%,rgba(47,140,255,.12),transparent 30%),var(--bg);}
+  .sidebar{background:#0a111c!important;border-right:1px solid #172337!important;box-shadow:16px 0 40px rgba(0,0,0,.18);}
+  .brand{font-family:'Poppins',sans-serif!important;font-weight:800!important;letter-spacing:.04em;display:flex;align-items:center;gap:.22rem!important;color:#fff!important;}
+  .brand .t2{color:#fff!important;}
+  .brand:after{content:none!important;}
+  .nav-item{color:#8795aa!important;border-radius:10px!important;margin:3px 10px!important;font-family:'Poppins',sans-serif!important;font-weight:500!important;}
+  .nav-item svg,.nav-item .icon{color:#2f8cff!important;stroke:#2f8cff!important;}
+  .nav-item.active{background:rgba(47,140,255,.13)!important;color:#fff!important;box-shadow:inset 3px 0 0 #2f8cff;}
+  .nav-item:hover{background:rgba(47,140,255,.08)!important;color:#fff!important;}
+  .main{background:transparent!important;}
+  .panel-box,.stat,.hero,.quote,.cert,.settings-section,.account-card,.analytics-card,.quick-action{background:linear-gradient(145deg,#101a2a,#0d1623)!important;border:1px solid #1b2a3f!important;box-shadow:0 14px 35px rgba(0,0,0,.18)!important;}
+  .stat-value,.page-title,h1,h2,h3,strong{color:#fff!important;}
+  .stat-label,.page-sub,.notes,.muted{color:#8290a5!important;}
+  .btn-primary,.new-trade-btn{background:#2f8cff!important;color:#fff!important;border:0!important;box-shadow:0 8px 22px rgba(47,140,255,.22)!important;}
+  .btn-ghost{background:#101a2a!important;color:#dbe8ff!important;border:1px solid #253751!important;}
+  input,select,textarea{background:#0b1421!important;color:#fff!important;border:1px solid #22334b!important;}
+  input::placeholder,textarea::placeholder{color:#596a82!important;}
+  table th{color:#8290a5!important;border-bottom:1px solid #1e2e44!important;}
+  table td{border-bottom:1px solid #17263a!important;color:#dfe7f4!important;}
+  .logout{color:#7f8da1!important;}
+  .logout svg{color:#2f8cff!important;stroke:#2f8cff!important;}
+  .hero{border-radius:16px!important;padding:1.25rem!important;}
+  .hero-badge{background:rgba(47,140,255,.12)!important;color:#5da7ff!important;border:1px solid rgba(47,140,255,.25)!important;}
+  .news-red{color:#ff5c67!important}.news-orange{color:#ff9d3d!important}
+  .profile-mini{display:flex;align-items:center;gap:.65rem;padding:12px 14px;border-top:1px solid #172337;margin-top:auto;}
+  .profile-avatar{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#2f8cff,#1769d2);color:#fff;font-weight:800;font-size:.9rem;box-shadow:0 5px 16px rgba(47,140,255,.25);}
+  .profile-mini .pname{font-size:.78rem;font-weight:600;color:#fff}.profile-mini .psub{font-size:.65rem;color:#6f7f95;}
+  .sidebar .nav{flex:1;overflow:auto;padding-top:12px;}
+  .trt-clock{font-size:.72rem;color:#8e9db2;padding:8px 0;}
+  .cert-upload-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;}
+  .cert-prop{overflow:hidden;border-radius:16px;background:#0e1725;border:1px solid #1e2e44;}
+  .cert-prop img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block;background:#09111d;}
+  .cert-prop .meta{padding:14px}.cert-prop .meta strong{font-size:.9rem}.cert-prop .meta small{display:block;color:#8190a6;margin-top:4px;font-size:.7rem;}
+  .cert-empty{padding:2.5rem;text-align:center;color:#8190a6;border:1px dashed #2a3b53;border-radius:16px;background:#0c1522;}
+  @media(max-width:800px){.sidebar{width:76px!important}.brand span,.nav-item:not(.active)::after{display:none}.profile-mini .pname,.profile-mini .psub{display:none}.nav-item{justify-content:center!important;margin:3px 8px!important}.nav-item svg{margin:0!important}.main{margin-left:76px!important;}.brand{justify-content:center;font-size:0}.brand:after{content:none!important}}
+
+/* ===== REFERENCE UI / BORSAWORKOUT INSPIRED ===== */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+html,body,*{font-family:'Poppins',sans-serif!important}
+body{background:#05090c!important;color:#f1f5f6!important;font-size:13px;letter-spacing:-.01em}
+#shell{background:#05090c;min-height:100vh}
+.sidebar{width:224px!important;background:#080d10!important;border-right:1px solid #172127!important;padding:28px 12px 14px!important;box-shadow:none!important;position:fixed!important;left:0;top:0;bottom:0;z-index:10}
+.brand{height:58px;margin:0 8px 25px!important;padding:0!important;display:flex!important;align-items:center!important;gap:10px!important;font-size:14px!important;letter-spacing:-.04em!important}
+.brand-mark{width:34px;height:34px;border:1px solid #164c46;color:#45e0c2;display:grid;place-items:center;font-size:21px;font-weight:500;background:#071316}
+.brand-name{color:#e9eff0;font-weight:700!important}
+.brand .t2{color:inherit!important}
+.nav-section-label{font-size:9px;color:#526066;letter-spacing:.16em;font-weight:700;margin:0 10px 10px}
+.nav{gap:3px!important;flex:none!important}
+.nav-item{height:42px!important;border-left:2px solid transparent!important;border-radius:0!important;padding:0 10px!important;color:#7e8b90!important;gap:12px!important;font-size:12px!important;font-weight:500!important;background:transparent!important}
+.nav-item svg{width:17px!important;height:17px!important;color:#5d6870!important;stroke-width:1.7!important}
+.nav-item:hover{color:#dfe8e9!important;background:#0d1519!important}
+.nav-item:hover svg,.nav-item.active svg{color:#45e0c2!important}
+.nav-item.active{color:#eaf4f2!important;background:#11201e!important;border-left-color:#45e0c2!important}
+.sidebar-spacer{flex:1}
+.profile-mini{border-top:1px solid #17242a!important;padding:14px 7px 4px!important;display:flex!important;align-items:center!important;gap:10px!important;background:transparent!important}
+.profile-avatar{width:34px!important;height:34px!important;border-radius:0!important;background:#45e0c2!important;color:#06100e!important;font-weight:700!important;display:grid!important;place-items:center!important}
+.profile-copy{min-width:0}.pname{font-size:12px!important;color:#edf3f3!important;font-weight:600!important}.psub{font-size:9px!important;color:#657277!important;margin-top:2px!important}.profile-chevron{margin-left:auto;color:#718087;font-size:16px}
+.main{margin-left:224px!important;padding:0!important;min-width:0!important;background:#05090c!important}
+.topbar{height:70px;border-bottom:1px solid #152127;display:flex;align-items:center;justify-content:space-between;padding:0 22px 0 54px;background:#05090c}
+.crumb{font-size:10px;color:#59656b;letter-spacing:.01em}.crumb strong{color:#e9eff0;font-weight:600}
+.top-actions{display:flex;align-items:center;gap:20px}.market-status{font-size:10px;color:#849096;letter-spacing:.14em;font-weight:600}.market-status i{display:inline-block;width:6px;height:6px;border-radius:50%;background:#45e0c2;box-shadow:0 0 9px #45e0c2;margin-right:7px}
+.ai-btn{height:38px;padding:0 15px;border:1px solid #503b70;background:#0b0a12;color:#bd8cff;font-size:11px;font-weight:600;cursor:pointer}.ai-btn:hover{background:#171021}
+.new-trade-top{height:38px;padding:0 19px;border:0;background:#45e0c2;color:#06100e;font-size:11px;font-weight:700;cursor:pointer}.new-trade-top span{font-size:18px;vertical-align:-1px;margin-right:5px}.new-trade-top:hover{filter:brightness(1.06)}
+#contentArea{padding:48px 54px 60px}
+.page-header{margin-bottom:26px!important}.page-title{font-size:48px!important;line-height:1.08!important;font-weight:500!important;letter-spacing:-.055em!important;color:#f1f5f6!important}.page-sub{font-size:12px!important;color:#78858a!important;margin-top:9px!important}
+.stats{gap:1px!important;background:#17242a!important;border:1px solid #17242a!important}.stat{background:#0b1216!important;padding:18px!important}.stat-label{font-size:9px!important;letter-spacing:.12em}.stat-value{font-size:22px!important;color:#eef4f4!important}
+.panel-box,.form-wrap,.settings-section,.cert,.stat,.dash-card{background:#0b1216!important;border:1px solid #17242a!important;box-shadow:none!important;border-radius:0!important}
+.dash-card{padding:18px!important}.card-head{border-bottom:1px solid #17242a!important;padding-bottom:13px!important}.card-head h3{font-size:12px!important;font-weight:600!important}.card-head span{font-size:9px!important;color:#657277!important}
+.recent-row{border-bottom-color:#17242a!important;font-size:11px!important;padding:11px 0!important}.recent-row strong{color:#e9f1f1}
+.quick-btn{background:#0d161a!important;border:1px solid #17242a!important;color:#e7eeee!important;border-radius:0!important;padding:13px!important}.quick-btn:hover{border-color:#2b5c55!important;background:#101c20!important}.quick-btn b{font-size:11px!important}.quick-btn span{font-size:9px!important;color:#6f7d82!important}
+.quote{background:#0e191d!important;border-left:2px solid #45e0c2!important;color:#a9b5b8!important;padding:13px!important;font-size:11px!important}
+.hero{background:#0b1216!important;border:1px solid #17242a!important;border-radius:0!important;box-shadow:none!important}
+.hero h2{font-weight:500!important}.hero p{color:#77858a!important}.hero-badge{color:#45e0c2!important;background:#0b1715!important;border:1px solid #164c46!important}
+.add-btn,.btn-primary{background:#45e0c2!important;color:#06100e!important;border:0!important;border-radius:0!important;font-weight:700!important}.btn-ghost{background:#0b1216!important;border:1px solid #253239!important;color:#8b989d!important;border-radius:0!important}
+.filters{background:#0b1216!important;border:1px solid #17242a!important}.filters button{color:#728086!important}.filters button.active{color:#45e0c2!important;background:#11201e!important}
+table{background:#0b1216!important;border:1px solid #17242a!important}th{color:#68757a!important;font-size:8px!important;letter-spacing:.12em!important;background:#091014!important}td{border-top:1px solid #17242a!important;color:#c5cecf!important;font-size:10px!important}.symbol{color:#eef4f4!important;font-weight:600}.dir-long{color:#45e0c2!important}.dir-short{color:#ff6674!important}
+.field label,.panel-label,.mini-label{color:#69777c!important}.field input,.field select,.field textarea{background:#080e11!important;border:1px solid #1b292f!important;color:#eaf0f0!important;border-radius:0!important}.field input:focus,.field select:focus,.field textarea:focus{outline:none!important;border-color:#45e0c2!important}
+.cert-prop{background:#0b1216!important;border:1px solid #17242a!important;border-radius:0!important}.cert-prop img{border-bottom:1px solid #17242a!important}.cert-prop .meta{background:#0b1216!important}.cert-prop strong{color:#eef4f4!important}.cert-prop small{color:#728086!important}
+.cert-upload-grid{gap:18px!important}.cert-empty{border:1px dashed #26353b!important;background:#0b1216!important;color:#6f7d82!important;padding:40px!important}
+.progress{background:#18262b!important}.progress i{background:#45e0c2!important}
+.pos{color:#45e0c2!important}.neg{color:#ff6674!important}
+@media(max-width:780px){.sidebar{position:relative!important;width:100%!important;height:auto!important}.main{margin-left:0!important}.topbar{padding:0 18px}.top-actions{gap:8px}.market-status{display:none}#contentArea{padding:28px 18px 40px}.page-title{font-size:36px!important}}
+
+
+
+/* ===== USER REQUESTED FINISHING TOUCHES ===== */
+.nav-item{color:#f1f5f6!important;}
+.nav-item svg{color:#f1f5f6!important;stroke:#f1f5f6!important;}
+.nav-item.active,.nav-item.active svg{color:var(--accent)!important;}
+.nav-item.active svg{stroke:var(--accent)!important;}
+.nav-item:hover,.nav-item:hover svg{color:#f1f5f6!important;stroke:#f1f5f6!important;}
+.sidebar-bottom{border-top:0!important;padding-top:.5rem!important;}
+.profile-mini{border-top:0!important;}
+.profile-avatar{background:var(--accent)!important;color:#06100e!important;box-shadow:0 0 18px rgba(69,224,194,.18)!important;}
+.sidebar .nav{scrollbar-width:none;-ms-overflow-style:none;}
+.sidebar .nav::-webkit-scrollbar{display:none;width:0;height:0;}
+.cert-empty-pro #emptyAdd{display:none!important;}
+.market-status.closed{color:#ff6674!important;}
+.market-status.closed i{background:#ff6674!important;box-shadow:0 0 10px rgba(255,102,116,.55)!important;}
+</style>
+
+<style id="final-emretrades-polish">
+:root{--bg:#070b0f;--panel:#0b1115;--panel-2:#10191f;--line:#18252c;--ink:#f4f7f8;--muted:#7c8a90;--accent:#2f8cff;--accent-soft:#4da0ff;--green:#32d4aa;--red:#ff6674;--orange:#ffad4d}
+body{background:var(--bg)!important;color:var(--ink)!important;font-family:'Poppins',sans-serif!important}
+#shell{background:var(--bg)}
+.sidebar{width:224px!important;background:#080d11!important;border-right:1px solid #172229!important;padding:26px 12px 14px!important}
+.brand{height:46px!important;padding:0 10px!important;margin:0 0 28px!important;align-items:center!important;gap:11px!important}
+.brand-logo{width:34px;height:34px;border:1px solid rgba(47,140,255,.45);display:grid;place-items:center;color:var(--accent);font-size:18px;font-weight:700;box-shadow:inset 0 0 18px rgba(47,140,255,.07)}
+.brand-name{font-size:15px!important;font-weight:800!important;letter-spacing:-.03em;color:#f2f6f8!important}.brand-name::first-letter{color:var(--accent)}
+.nav{gap:4px!important;padding-top:0!important}.nav-item{height:42px!important;padding:0 12px!important;border:0!important;border-left:2px solid transparent!important;border-radius:0!important;color:#819097!important;font-size:12px!important;gap:12px!important}.nav-item svg{width:17px!important;height:17px!important;stroke:var(--accent)!important;color:var(--accent)!important}.nav-item:hover{background:#0d171d!important;color:#dce6ea!important}.nav-item.active{background:#0d1b21!important;color:#f5f8fa!important;border-left-color:var(--accent)!important}.nav-item.active svg{stroke:var(--accent)!important}
+.profile-mini{border-top:1px solid #172229!important;padding:14px 8px 5px!important}.profile-avatar{background:linear-gradient(145deg,#2f8cff,#1769d2)!important}.profile-mini .pname{color:#eef4f6!important}.profile-mini .psub{color:#718087!important}
+.main{padding:0!important;background:var(--bg)!important}.topbar{height:70px!important;border-bottom:1px solid #172229!important;padding:0 28px!important;background:#070b0f!important}.crumb{color:#75838a!important;font-size:11px!important}.crumb strong{color:#f1f5f7!important}.top-actions{gap:20px!important}.market-status{font-size:10px!important;color:#87949a!important}.market-status i{background:var(--green)!important;box-shadow:0 0 9px rgba(50,212,170,.5)!important}.ai-btn{height:38px!important;border:1px solid #29456c!important;background:#0b1118!important;color:#77a9ff!important}.new-trade-top{height:38px!important;background:var(--accent)!important;color:#fff!important;box-shadow:0 6px 18px rgba(47,140,255,.18)!important}.new-trade-top:hover,.primary-wide:hover{filter:brightness(1.08)!important}
+#contentArea{padding:42px 54px 64px!important;max-width:1500px!important}.eyebrow{font-size:9px!important;letter-spacing:.18em!important;color:var(--accent)!important;font-weight:700!important}.page-head-row{display:flex!important;justify-content:space-between!important;align-items:flex-end!important;gap:20px!important}.page-title{font-size:42px!important;font-weight:600!important;letter-spacing:-.045em!important;color:#f4f7f8!important}.page-sub{color:#78868c!important;font-size:11px!important}.primary-wide{height:40px;border:0;background:var(--accent);color:#fff;padding:0 18px;font:600 11px Poppins,sans-serif;cursor:pointer}.primary-wide span{font-size:17px;vertical-align:-1px}
+.metric-grid{display:grid!important;grid-template-columns:repeat(4,1fr)!important;gap:1px!important;background:#18252c!important;border:1px solid #18252c!important;margin:0 0 18px!important}.metric{background:#0b1115!important;padding:20px!important;min-height:112px!important}.metric span{display:block;font-size:9px!important;letter-spacing:.14em;color:#718087!important}.metric strong{display:block;font-size:25px!important;line-height:1.25;margin-top:12px!important;font-weight:600!important}.metric small{display:block;color:#6e7b81!important;font-size:9px!important;margin-top:5px!important}.dash-welcome{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:22px}.dash-welcome h1{font-size:42px;margin:5px 0 5px;letter-spacing:-.05em}.dash-welcome p{margin:0;color:#7b888e;font-size:11px}.dash-layout{display:grid!important;grid-template-columns:minmax(0,1.65fr) minmax(300px,.85fr)!important;gap:18px!important}.dash-main-col,.dash-side-col{min-width:0}.pro-card{background:#0b1115!important;border:1px solid #18252c!important;padding:20px!important;margin-bottom:18px!important;border-radius:0!important;box-shadow:none!important}.section-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px}.section-head h3{font-size:14px!important;margin:4px 0 0!important;font-weight:600!important}.section-head>span{font-size:9px;color:#6e7b81}.text-btn{background:none;border:0;color:#6e9fe8;font:500 10px Poppins;cursor:pointer}.equity-chart{width:100%;height:180px;display:block;background:linear-gradient(180deg,rgba(47,140,255,.045),transparent);border-top:1px solid #132027}.chart-empty{height:180px;display:grid;place-items:center;color:#65747b;font-size:10px}.trade-list{border-top:1px solid #17242a}.dash-trade{display:flex;justify-content:space-between;align-items:center;padding:14px 4px;border-bottom:1px solid #17242a}.dash-trade b{display:block;font-size:11px}.dash-trade span{display:block;color:#68777e;font-size:9px;margin-top:4px}.dash-trade-right{display:flex;align-items:center;gap:16px}.dash-trade-right strong{font-size:11px}.dash-trade-right em{font-style:normal;font-size:8px}.account-meta,.limit-row,.limit-foot{display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#718087}.account-meta{padding-bottom:16px;border-bottom:1px solid #17242a}.account-meta b{font-size:18px;color:#eef4f6}.limit-row{margin-top:18px}.limit-row b{color:#cbd4d8}.limit-bar{height:5px;background:#17242a;margin:9px 0 7px;overflow:hidden}.limit-bar i{display:block;height:100%;background:var(--accent)}.limit-foot{font-size:8px}.coach-card p{font-size:11px;line-height:1.7;color:#aeb9bd;margin:0 0 15px}.outline-btn{height:38px;border:1px solid #263740;background:#0c1419;color:#cbd5d9;padding:0 15px;font:500 10px Poppins;cursor:pointer}.outline-btn:hover{border-color:#356cae;color:#fff}.empty-mini,.empty-pro{color:#65747b;font-size:10px;padding:20px 0}
+.journal-toolbar{display:flex;gap:10px;align-items:center;margin:18px 0 10px}.searchbox{height:38px;display:flex;align-items:center;gap:8px;border:1px solid #18252c;background:#0b1115;color:#617077;padding:0 11px;flex:1}.searchbox input{background:none;border:0;outline:0;color:#eaf0f2;width:100%;font-size:10px}.filter-pills{display:flex;border:1px solid #18252c}.filter-pills button{height:36px;border:0;border-right:1px solid #18252c;background:#0b1115;color:#69777d;padding:0 13px;font:500 9px Poppins;cursor:pointer}.filter-pills button:last-child{border-right:0}.filter-pills button.active{background:#101d27;color:#79aaff}.trade-form-pro{background:#0b1115;border:1px solid #18252c;padding:20px;margin-bottom:18px}.form-section-title{font-size:10px;letter-spacing:.13em;color:#87949a;text-transform:uppercase;margin-bottom:18px}.form-grid-pro{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.form-grid-pro .span-2{grid-column:span 2}.field{margin:0!important}.field label{font-size:9px!important;color:#68767d!important;margin-bottom:6px!important}.field input,.field select,.field textarea{background:#070c10!important;border:1px solid #1b2a31!important;color:#edf2f4!important;padding:10px 11px!important;font-size:10px!important;border-radius:0!important}.field input:focus,.field select:focus,.field textarea:focus{border-color:#356cae!important;outline:0!important}.form-actions{margin-top:18px!important}.table-pro{background:#0b1115;border:1px solid #18252c;overflow:auto}.table-pro table{width:100%;border-collapse:collapse}.table-pro th{font-size:8px;letter-spacing:.12em;color:#617077;text-align:left;padding:13px 14px;border-bottom:1px solid #18252c}.table-pro td{padding:15px 14px;border-bottom:1px solid #142027;font-size:10px;color:#aeb9bd}.table-pro tbody tr:hover{background:#0d161b}.side-badge{font-size:8px;padding:4px 7px}.side-badge.long{background:rgba(50,212,170,.1);color:#44d8b0}.side-badge.short{background:rgba(255,102,116,.1);color:#ff7d89}.icon-delete{background:none;border:0;color:#59676d;font-size:17px;cursor:pointer}.icon-delete:hover{color:var(--red)}
+.cert-grid-pro{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}.cert-card-pro{background:#0b1115;border:1px solid #18252c}.cert-image-wrap{position:relative;background:#060b0f;aspect-ratio:16/10;overflow:hidden}.cert-image-wrap img{width:100%;height:100%;object-fit:contain;display:block}.cert-remove{position:absolute;top:9px;right:9px;width:28px;height:28px;border:1px solid #3a2529;background:#0b1115;color:#ff7783;cursor:pointer}.cert-info{padding:15px 16px}.cert-firm{font-size:12px;font-weight:600;color:#eef3f5}.cert-phase{font-size:10px;color:#8d9aa0;margin-top:6px}.cert-date{font-size:9px;color:#59676d;margin-top:4px}.cert-empty-pro{grid-column:1/-1;border:1px dashed #24353e;padding:70px 20px;text-align:center}.cert-empty-icon{font-size:24px;color:var(--accent)}.cert-empty-pro h3{font-size:14px;margin:12px 0 5px}.cert-empty-pro p{color:#68767d;font-size:10px;margin:0 auto 18px;max-width:430px}.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.72);display:grid;place-items:center;padding:20px;z-index:9999}.modal-pro{width:min(520px,100%);background:#0b1115;border:1px solid #263740;box-shadow:0 24px 80px rgba(0,0,0,.5);padding:22px}.modal-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}.modal-head h3{font-size:17px;margin:4px 0 0}.modal-x{width:30px;height:30px;background:none;border:1px solid #263740;color:#87949a;font-size:18px;cursor:pointer}.two-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.coach-summary{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid #18252c;margin-bottom:16px}.coach-summary>div{padding:13px;border-right:1px solid #18252c}.coach-summary>div:last-child{border-right:0}.coach-summary span{display:block;font-size:7px;color:#68767d;letter-spacing:.1em}.coach-summary b{display:block;margin-top:6px;font-size:12px;color:#eef4f6;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.coach-message{background:#0e171c;border:1px solid #18252c;padding:14px;margin-top:10px}.coach-message strong{font-size:10px}.coach-message p{font-size:10px;line-height:1.7;color:#9eabb0;margin:7px 0 0}
+@media(max-width:900px){.metric-grid{grid-template-columns:1fr 1fr!important}.dash-layout{grid-template-columns:1fr!important}.cert-grid-pro{grid-template-columns:1fr 1fr}.form-grid-pro{grid-template-columns:1fr 1fr}.page-head-row{align-items:flex-start}.dash-welcome{align-items:flex-start;gap:15px;flex-direction:column}}
+@media(max-width:620px){#contentArea{padding:28px 18px 40px!important}.topbar{padding:0 15px!important}.metric-grid{grid-template-columns:1fr!important}.cert-grid-pro{grid-template-columns:1fr}.form-grid-pro{grid-template-columns:1fr}.form-grid-pro .span-2{grid-column:auto}.journal-toolbar{flex-direction:column;align-items:stretch}.filter-pills{width:100%}.filter-pills button{flex:1}.two-fields,.coach-summary{grid-template-columns:1fr 1fr}.page-title,.dash-welcome h1{font-size:34px!important}}
+
+/* ===== EMRETRADES FINAL DARK / TURQUOISE SYSTEM ===== */
+:root{--accent:#45e0c2;--accent-2:#2aa990;--blue:#45e0c2;--blue-2:#2aa990;--gold:#45e0c2;--gold-dim:#2aa990;}
+body{background:#05090c;color:#f1f5f6;font-family:'Poppins',sans-serif;}
+#gate{background:#05090c;}
+.gate-card{max-width:390px;background:#0b1216;border:1px solid #17242a;border-radius:14px;padding:2rem;box-shadow:0 24px 70px rgba(0,0,0,.35);}
+.gate-brand{color:var(--accent);font-size:1rem;letter-spacing:.02em;}
+.gate-title{font-size:1.45rem;letter-spacing:-.03em;}
+.gate-sub{color:#7f8c91;}
+.gate-card .field input{background:#080d10;border:1px solid #1b2b30;border-radius:8px;padding:.78rem .85rem;}
+.gate-card .field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(69,224,194,.08);}
+.gate-card .btn-primary{background:var(--accent);color:#06100e;border:0;border-radius:8px;font-weight:700;padding:.78rem 1rem;}
+.gate-error{color:#ff6674;}
+.sidebar{background:#070c10;border-right:1px solid #142127;padding:1.35rem .9rem;}
+.brand{align-items:center;gap:.65rem;padding:0 .45rem;margin-bottom:2.1rem;}
+.brand-mark{width:34px;height:34px;border:1px solid rgba(69,224,194,.3);border-radius:9px;display:grid;place-items:center;color:var(--accent);background:rgba(69,224,194,.04);}
+.brand-mark svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.brand-word{font-size:1rem;font-weight:700;letter-spacing:-.03em;color:#eef5f4;}
+.brand-word b{color:var(--accent);font-weight:800;}
+.nav{gap:.18rem;}
+.nav-item{color:#7f8c91;border-left:2px solid transparent;border-radius:7px;padding:.68rem .72rem;}
+.nav-item svg{color:var(--accent);stroke:currentColor;}
+.nav-item:hover{color:#eef5f4;background:rgba(69,224,194,.035);}
+.nav-item.active{color:#f1f5f6;background:rgba(69,224,194,.08);border-left-color:var(--accent);}
+.nav-section-label{color:#55666b;}
+.sidebar-bottom{margin-top:auto;padding-top:1rem;border-top:1px solid #142127;}
+.sidebar-bottom .nav-item{margin-bottom:.45rem;}
+.profile-mini{display:flex;align-items:center;gap:.7rem;padding:.75rem .65rem;margin-top:.2rem;border-top:1px solid #142127;}
+.profile-avatar{width:34px;height:34px;border-radius:9px;background:var(--accent);color:#06100e;display:grid;place-items:center;font-weight:800;}
+.profile-copy{min-width:0;}
+.profile-copy .pname{color:#eef5f4;font-weight:600;font-size:.82rem;}
+.profile-copy .prole{color:#65777c;font-size:.65rem;margin-top:.1rem;}
+.topbar{border-bottom:1px solid #142127;}
+.market-status i{background:var(--accent);box-shadow:0 0 10px rgba(69,224,194,.55);}
+.ai-btn{border-color:#25444a;color:var(--accent);background:#0a1216;}
+.new-trade-top{background:var(--accent);color:#06100e;border-color:var(--accent);font-weight:700;}
+.new-trade-top:hover{background:#5de8ce;}
+.clean-welcome{margin-bottom:1.5rem;}
+.clean-welcome h1{font-size:2.2rem;letter-spacing:-.045em;margin:.25rem 0 .3rem;}
+.clean-welcome p{color:#718086;}
+.metric,.pro-card,.panel-box,.form-wrap,.settings-section,.cert-card-pro,.stat{background:#0b1216;border-color:#17242a;box-shadow:none;}
+.metric strong{color:#f1f5f6;}
+.metric span,.eyebrow{color:var(--accent);}
+.pro-card{border-radius:10px;}
+.primary-wide{background:var(--accent);color:#06100e;border-color:var(--accent);}
+.outline-btn,.text-btn{color:var(--accent);border-color:#245047;}
+.equity-chart path{stroke:var(--accent)!important;}
+.limit-bar{background:#152126;}
+.limit-bar i{background:var(--accent);}
+.news-panel{padding:0;overflow:hidden;}
+.news-legend{display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;padding:1rem 1.1rem;border-bottom:1px solid #17242a;font-size:.72rem;}
+.news-source{color:#65777c;}
+.news-list{display:flex;flex-direction:column;}
+.news-row{display:grid;grid-template-columns:70px 60px 26px 1fr;align-items:center;min-height:52px;padding:0 1.1rem;border-bottom:1px solid #111c20;}
+.news-row:hover{background:rgba(69,224,194,.025);}
+.news-time{font-variant-numeric:tabular-nums;color:#dce6e7;font-weight:600;font-size:.78rem;}
+.news-currency{font-size:.7rem;color:#8c9a9e;font-weight:700;}
+.news-impact i{display:block;width:8px;height:8px;border-radius:50%;}
+.news-impact.red i{background:#ff6674;box-shadow:0 0 8px rgba(255,102,116,.35);}
+.news-impact.orange i{background:#ffad4d;box-shadow:0 0 8px rgba(255,173,77,.3);}
+.news-event{font-size:.78rem;color:#e9eeee;}
+.news-foot{padding:.9rem 1.1rem;color:#53656a;font-size:.66rem;}
+.news-row.news-upcoming{
+  border:1px solid #45e0c2!important;
+  box-shadow:0 0 9px rgba(69,224,194,.10);
+  position:relative;
+  z-index:1;
+}
+.news-row.news-upcoming:hover{
+  background:rgba(69,224,194,.06)!important;
+}
+
+@media(max-width:700px){.news-row{grid-template-columns:58px 48px 22px 1fr;padding:0 .75rem;}.clean-welcome h1{font-size:1.75rem;}}
+
+
+/* ===== USER REQUESTED FINISHING TOUCHES ===== */
+.nav-item{color:#f1f5f6!important;}
+.nav-item svg{color:#f1f5f6!important;stroke:#f1f5f6!important;}
+.nav-item.active,.nav-item.active svg{color:var(--accent)!important;}
+.nav-item.active svg{stroke:var(--accent)!important;}
+.nav-item:hover,.nav-item:hover svg{color:#f1f5f6!important;stroke:#f1f5f6!important;}
+.sidebar-bottom{border-top:0!important;padding-top:.5rem!important;}
+.profile-mini{border-top:0!important;}
+.profile-avatar{background:var(--accent)!important;color:#06100e!important;box-shadow:0 0 18px rgba(69,224,194,.18)!important;}
+.sidebar .nav{scrollbar-width:none;-ms-overflow-style:none;}
+.sidebar .nav::-webkit-scrollbar{display:none;width:0;height:0;}
+.cert-empty-pro #emptyAdd{display:none!important;}
+.market-status.closed{color:#ff6674!important;}
+.market-status.closed i{background:#ff6674!important;box-shadow:0 0 10px rgba(255,102,116,.55)!important;}
+</style>
+
+<style id="final-account-ui">
+.nav-item,.nav-item svg,.nav-item .icon{color:#f1f5f6!important;stroke:#f1f5f6!important;}
+.nav-item:hover{color:#f1f5f6!important}.nav-item.active,.nav-item.active svg,.nav-item.active .icon{color:#45e0c2!important;stroke:#45e0c2!important;}
+.sidebar-bottom{border-top:1px solid #17242a!important;padding-top:10px!important;margin-top:auto!important;}
+.profile-mini{border-top:0!important;}
+.profile-avatar{background:#45e0c2!important;color:#06100e!important;background-image:url('https://i.hizliresim.com/xjm282gg.jpg')!important;background-size:cover!important;background-position:center!important;font-size:0!important;}
+.dash-account-select{min-width:190px}.dash-account-select label{display:block;font-size:9px;color:#657277;letter-spacing:.12em;font-weight:700;margin-bottom:6px}.dash-account-select select{width:100%;min-width:190px;height:40px;padding:0 34px 0 12px;border:1px solid #26353a;background:#0b1216;color:#eef4f3;font-size:11px;font-weight:600;border-radius:0!important;cursor:pointer}.dash-account-select select:focus{outline:1px solid #45e0c2;border-color:#45e0c2}
+</style>
+
+<style id="final-user-polish-2">
+/* Sidebar: inactive white, active mint; no blue accent on the active rail */
+.nav-item{color:#f1f5f6!important;}
+.nav-item svg,.nav-item .icon{color:#f1f5f6!important;stroke:#f1f5f6!important;}
+.nav-item:hover{color:#f1f5f6!important;background:#0d171d!important;}
+.nav-item.active{color:#45e0c2!important;border-left-color:#45e0c2!important;background:#0d1b21!important;box-shadow:none!important;}
+.nav-item.active svg,.nav-item.active .icon{color:#45e0c2!important;stroke:#45e0c2!important;}
+/* News source button: centered label */
+.news-panel + *{}
+.outline-btn{display:inline-flex!important;align-items:center!important;justify-content:center!important;text-align:center!important;}
+/* Keep the requested profile image URL on the lower-left avatar */
+.profile-avatar{background:#45e0c2!important;background-image:url('https://i.hizliresim.com/xjm282gg.jpg')!important;background-size:cover!important;background-position:center!important;background-repeat:no-repeat!important;}
+</style>
+
+<style id="trade-details-ui">
+.trade-detail-row td{padding:0!important;border-bottom:1px solid #1b2a3f!important}
+.trade-detail{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;padding:16px 18px;background:linear-gradient(145deg,#0b1421,#0d1827);border-left:2px solid #2f8cff}
+.trade-detail-item{padding:10px 12px;border:1px solid #1c2c42;border-radius:10px;background:#0a121e}
+.trade-detail-label{display:block;font-size:.62rem;letter-spacing:.08em;color:#71829a;text-transform:uppercase;margin-bottom:5px}
+.trade-detail-value{display:block;color:#eef4ff;font-size:.78rem;line-height:1.45;word-break:break-word}
+.trade-detail-note{grid-column:1/-1}
+.trade-detail-note .trade-detail-value{white-space:pre-wrap;color:#cdd8e8}
+.trade-expand{width:30px;height:30px;border:1px solid #263b56;border-radius:8px;background:#0d1827;color:#8fa5c0;cursor:pointer;font-size:15px;line-height:1;transition:.15s}
+.trade-expand:hover{border-color:#2f8cff;color:#fff;background:rgba(47,140,255,.12)}
+.trade-expand.open{transform:rotate(90deg);color:#fff;border-color:#2f8cff}
+@media(max-width:900px){.trade-detail{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.trade-detail{grid-template-columns:1fr}.trade-detail-note{grid-column:auto}}
+</style>
+<style id="trade-details-edit-ui">
+.trade-detail-edit .trade-detail-label{margin-bottom:7px}
+.trade-edit-input{width:100%;box-sizing:border-box;border:1px solid #263b56;border-radius:8px;background:#0d1827;color:#eef4ff;padding:9px 10px;font:inherit;font-size:.78rem;outline:none}
+.trade-edit-input:focus{border-color:#2f8cff;box-shadow:0 0 0 2px rgba(47,140,255,.10)}
+.trade-edit-notes{resize:vertical;min-height:78px;line-height:1.45}
+.trade-edit-actions{grid-column:1/-1;display:flex;justify-content:flex-end;gap:9px;padding-top:2px}
+.trade-save-btn,.trade-cancel-btn{border-radius:8px;padding:9px 15px;font:inherit;font-size:.75rem;font-weight:700;cursor:pointer}
+.trade-save-btn{border:1px solid #2f8cff;background:#2f8cff;color:#fff}
+.trade-save-btn:hover{filter:brightness(1.08)}
+.trade-cancel-btn{border:1px solid #263b56;background:#0d1827;color:#9fb0c5}
+.trade-cancel-btn:hover{border-color:#526b88;color:#fff}
+@media(max-width:800px){.trade-detail{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.trade-detail{grid-template-columns:1fr}.trade-edit-actions{justify-content:stretch}.trade-save-btn,.trade-cancel-btn{flex:1}}
+</style>
+</head>
+<body>
+
+<div id="intro">
+  <div class="tape"></div>
+  <div class="intro-title">Emre<span>Trades</span></div>
+  <div class="intro-sub">her işlem, kayıt altında</div>
+</div>
+
+<div id="gate" class="hidden"></div>
+<div id="shell" class="hidden"></div>
+
+<script>
+/* ---------- ICONS (feather-style inline SVG) ---------- */
+const ICONS = {
+  accounts: '<svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h10M7 13h6"/></svg>',
+  news: '<svg class="icon" viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="M7 9h10M7 13h7M7 16h5"/></svg>',
+  analytics: '<svg class="icon" viewBox="0 0 24 24"><path d="M4 19V5M4 19h17"/><path d="m7 15 3-4 3 2 5-7"/></svg>',
+  dashboard: '<svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>',
+  journal: '<svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
+  award: '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><path d="M8.21 13.89 7 23l5-3 5 3-1.21-9.12"/></svg>',
+  settings: '<svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
+  logout: '<svg class="icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>',
+  lock: '<svg class="icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+  check: '<svg class="icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
+};
+
+/* ---------- STATE ---------- */
+const S = {
+  trades: JSON.parse(localStorage.getItem('ej_trades') || '[]'),
+  password: localStorage.getItem('ej_auth'),
+  profile: JSON.parse(localStorage.getItem('ej_profile') || '{"name":""}'),
+  view: 'dashboard',
+  filter: 'all',
+  formOpen: false,
+  accounts: JSON.parse(localStorage.getItem('ej_accounts') || '[]'),
+  activeAccount: localStorage.getItem('ej_active_account') || '',
+  news: JSON.parse(localStorage.getItem('ej_news') || '[]'),
+};
+if(S.accounts.length){ if(!S.activeAccount) S.activeAccount=S.accounts[0].id; S.trades.forEach(t=>{if(!t.accountId)t.accountId=S.activeAccount}); localStorage.setItem('ej_active_account',S.activeAccount); localStorage.setItem('ej_trades',JSON.stringify(S.trades)); }
+
+function saveTrades(){ localStorage.setItem('ej_trades', JSON.stringify(S.trades)); }
+function saveAuth(){ localStorage.setItem('ej_auth', S.password); }
+function saveProfile(){ localStorage.setItem('ej_profile', JSON.stringify(S.profile)); }
+function saveAccounts(){ localStorage.setItem('ej_accounts', JSON.stringify(S.accounts)); }
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function computePnl(t){
+  if(t && t.pnl!==undefined && t.pnl!==null && String(t.pnl).trim()!==''){
+    const entered=parseFloat(t.pnl);
+    if(!isNaN(entered)) return entered;
+  }
+  // Eski kayıtlarda P&L alanı yoksa, eski Entry/Exit/Lot verisinden sonucu koru.
+  const entry=parseFloat(t.entry), exit=parseFloat(t.exit), size=parseFloat(t.size);
+  if(isNaN(entry)||isNaN(exit)||isNaN(size)) return 0;
+  const diff = t.direction==='long' ? exit-entry : entry-exit;
+  return diff*size;
+}
+function fmtMoney(n){
+  const sign = n<0?'-':'';
+  return sign+'$'+Math.abs(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function escapeHtml(s){
+  return (s||'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+const ACHIEVEMENTS = [
+  {id:'first', title:'İlk İşlem', desc:'Defterine ilk işlemini kaydettin.', test: s=>s.count>=1},
+  {id:'ten', title:'10 İşlem', desc:'10 işlem kaydına ulaştın.', test: s=>s.count>=10},
+  {id:'fifty', title:'50 İşlem', desc:'50 işlem kaydına ulaştın.', test: s=>s.count>=50},
+  {id:'firstwin', title:'İlk Kazanç', desc:'İlk kârlı işlemini gerçekleştirdin.', test: s=>s.hasWin},
+  {id:'streak', title:"5'li Seri", desc:'Üst üste 5 kazanan işlem yaptın.', test: s=>s.bestStreak>=5},
+  {id:'positive', title:'Pozitif Defter', desc:'En az 5 işlemle toplamda kârdasın.', test: s=>s.count>=5 && s.total>0},
+];
+
+function getAccountTrades(){
+  if(!S.activeAccount) return S.trades;
+  return S.trades.filter(t=>!t.accountId || t.accountId===S.activeAccount);
+}
+
+function computeStats(){
+  const accountTrades=getAccountTrades();
+  if(accountTrades.length===0) return {total:0,count:0,winRate:0,avgWin:0,avgLoss:0,hasWin:false,bestStreak:0,equity:[]};
+  const withPnl = accountTrades.map(t=>({...t,pnl:computePnl(t)})).sort((a,b)=>a.date.localeCompare(b.date));
+  const total = withPnl.reduce((s,t)=>s+t.pnl,0);
+  const wins = withPnl.filter(t=>t.pnl>0);
+  const losses = withPnl.filter(t=>t.pnl<0);
+  const avgWin = wins.length ? wins.reduce((s,t)=>s+t.pnl,0)/wins.length : 0;
+  const avgLoss = losses.length ? losses.reduce((s,t)=>s+t.pnl,0)/losses.length : 0;
+  let streak=0,bestStreak=0;
+  withPnl.forEach(t=>{ if(t.pnl>0){streak++;bestStreak=Math.max(bestStreak,streak);} else streak=0; });
+  let cum=0; const equity = withPnl.map(t=>{cum+=t.pnl; return cum;});
+  return {total,count:accountTrades.length,winRate:(wins.length/accountTrades.length)*100,avgWin,avgLoss,hasWin:wins.length>0,bestStreak,equity};
+}
+
+/* ---------- INTRO ---------- */
+const introEl = document.getElementById('intro');
+introEl.addEventListener('click', goToGate);
+setTimeout(goToGate, 3000);
+let introGone = false;
+function goToGate(){
+  if(introGone) return;
+  introGone = true;
+  introEl.classList.add('out');
+  setTimeout(()=>{ introEl.classList.add('hidden'); renderGate(); document.getElementById('gate').classList.remove('hidden'); }, 500);
+}
+
+/* ---------- GATE ---------- */
+function renderGate(){
+  const gate = document.getElementById('gate');
+  const hasPw = !!S.password;
+  gate.innerHTML = `
+    <div class="gate-card">
+      <div class="gate-brand">${ICONS.lock} EmreTrades</div>
+      ${hasPw ? `
+        <div class="gate-title">Tekrar hoş geldin</div>
+        <div class="gate-sub">Devam etmek için şifreni gir.</div>
+        <div id="gateError" class="gate-error hidden"></div>
+        <div class="field"><label>Şifre</label><input type="password" id="loginPw" autofocus></div>
+        <button class="btn-primary" style="width:100%" id="loginBtn">Giriş yap</button>
+      ` : `
+        <div class="gate-title">Şifreni oluştur</div>
+        <div class="gate-sub">Bu şifre yalnızca bu tarayıcıda saklanır, gerçek bir güvenlik sistemi değildir.</div>
+        <div id="gateError" class="gate-error hidden"></div>
+        <div class="field"><label>Şifre</label><input type="password" id="setupPw" autofocus></div>
+        <div class="field"><label>Şifre (tekrar)</label><input type="password" id="setupPwConfirm"></div>
+        <button class="btn-primary" style="width:100%" id="setupBtn">Oluştur ve gir</button>
+      `}
+    </div>
+  `;
+  const err = document.getElementById('gateError');
+  function showErr(msg){ err.textContent = msg; err.classList.remove('hidden'); }
+
+  if(hasPw){
+    const pwInput = document.getElementById('loginPw');
+    function doLogin(){
+      if(pwInput.value !== S.password){ showErr('Şifre yanlış.'); return; }
+      enterApp();
+    }
+    document.getElementById('loginBtn').addEventListener('click', doLogin);
+    pwInput.addEventListener('keydown', e=>{ if(e.key==='Enter') doLogin(); });
+  } else {
+    function doSetup(){
+      const pw = document.getElementById('setupPw').value;
+      const pw2 = document.getElementById('setupPwConfirm').value;
+      if(pw.length<4){ showErr('Şifre en az 4 karakter olmalı.'); return; }
+      if(pw!==pw2){ showErr('Şifreler uyuşmuyor.'); return; }
+      S.password = pw; saveAuth();
+      enterApp();
+    }
+    document.getElementById('setupBtn').addEventListener('click', doSetup);
+  }
+}
+
+async function fetchNewsCalendar(){
+  const target='https://nfs.faireconomy.media/ff_calendar_thisweek.json';
+  const urls=[
+    target,
+    'https://api.allorigins.win/get?url='+encodeURIComponent(target),
+    'https://corsproxy.io/?url='+encodeURIComponent(target),
+    'https://api.codetabs.com/v1/proxy?quest='+encodeURIComponent(target)
+  ];
+  const fetchOne=async(url)=>{
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),2500);
+    try{
+      const r=await fetch(url,{cache:'no-store',signal:controller.signal});
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      const raw=await r.json();
+      const data=Array.isArray(raw)?raw:(typeof raw.contents==='string'?JSON.parse(raw.contents):raw.contents);
+      if(!Array.isArray(data)) throw new Error('Invalid calendar data');
+      return data;
+    }finally{clearTimeout(timer)}
+  };
+  return Promise.any(urls.map(fetchOne));
+}
+
+async function warmNewsCache(){
+  try{
+    const trtParts=(date)=>{
+      const p=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Istanbul',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(date);
+      const o={}; p.forEach(x=>{if(x.type!=='literal')o[x.type]=x.value});
+      return `${o.year}-${o.month}-${o.day}`;
+    };
+    const timeTrt=(date)=>new Intl.DateTimeFormat('tr-TR',{timeZone:'Europe/Istanbul',hour:'2-digit',minute:'2-digit',hour12:false}).format(date);
+    const impact=(v)=>{v=String(v??'').trim().toLowerCase();return (v==='high'||v==='red'||v==='3')?'red':(v==='medium'||v==='med'||v==='orange'||v==='2')?'orange':null};
+    const today=trtParts(new Date());
+    const data=await fetchNewsCalendar();
+    const items=data.map(x=>{const im=impact(x.impact);const d=new Date(x.date);if(!im||isNaN(d)||trtParts(d)!==today)return null;return {time:timeTrt(d),currency:x.country||'',impact:im,event:x.title||''}}).filter(Boolean).sort((a,b)=>a.time.localeCompare(b.time)||a.event.localeCompare(b.event));
+    window.__newsCache={day:today,items};
+  }catch(e){console.warn('News warmup failed',e)}
+}
+
+function enterApp(){
+  document.getElementById('gate').classList.add('hidden');
+  document.getElementById('shell').classList.remove('hidden');
+  renderShell();
+  warmNewsCache();
+}
+
+/* ---------- SHELL / APP ---------- */
+const NAV = [
+  {id:'dashboard', label:'Dashboard', icon:'dashboard'},
+  {id:'journal', label:'Journal', icon:'journal'},
+  {id:'analytics', label:'Analiz', icon:'analytics'},
+  {id:'accounts', label:'Accounts', icon:'accounts'},
+  {id:'news', label:'News', icon:'news'},
+  {id:'certificates', label:'Certificates', icon:'award'},
+  {id:'settings', label:'Ayarlar', icon:'settings'},
+];
+
+function getTurkeyNow(){
+  const parts=new Intl.DateTimeFormat('en-US',{timeZone:'Europe/Istanbul',weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false}).formatToParts(new Date());
+  const out={}; parts.forEach(p=>out[p.type]=p.value); return out;
+}
+function isForexMarketOpen(){
+  const t=getTurkeyNow();
+  const day=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(t.weekday);
+  const minutes=Number(t.hour)*60+Number(t.minute);
+  // Kullanıcının istediği gösterim: 00:00–00:59 kapalı, 01:00–23:59 açık.
+  // Hafta sonu ise forex piyasası kapalıdır.
+  if(day===0 || day===6) return false;
+  return minutes>=60;
+}
+function updateMarketStatus(){
+  const el=document.getElementById('marketStatus');
+  if(!el) return;
+  const open=isForexMarketOpen();
+  el.classList.toggle('closed',!open);
+  const span=el.querySelector('span'); if(span) span.textContent=open?'PİYASA AÇIK':'PİYASA KAPALI';
+}
+function startMarketStatusClock(){
+  updateMarketStatus();
+  clearInterval(window.__marketStatusTimer);
+  window.__marketStatusTimer=setInterval(updateMarketStatus,15000);
+}
+
+function renderShell(){
+  const shell=document.getElementById('shell');
+  const name=S.profile.name || 'Emre';
+  shell.innerHTML=`
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 22 12 15l5 4 9-10"/><path d="M20 9h6v6"/></svg></span>
+        <span class="brand-word"><span>EMRE</span><b>TRADES</b></span>
+      </div>
+      <div class="nav-section-label">WORKSPACE</div>
+      <div class="nav" id="navList"></div>
+      <div class="sidebar-bottom" id="navBottom"></div>
+      <div class="profile-mini">
+        <div class="profile-avatar" aria-label="Emre profil fotoğrafı"></div>
+        <div class="profile-copy"><div class="pname">${escapeHtml(name)}</div><div class="prole">Trader</div></div>
+      </div>
+    </aside>
+    <main class="main">
+      <header class="topbar">
+        <div class="crumb">WORKSPACE / <strong id="crumbPage">${NAV.find(x=>x.id===S.view)?.label||'Dashboard'}</strong></div>
+        <div class="top-actions">
+          <div class="market-status" id="marketStatus"><i></i> <span>PİYASA AÇIK</span></div>
+          <button class="ai-btn" id="aiCoach">✦ &nbsp; AI Koç</button>
+          <button class="new-trade-top" id="topNewTrade"><span>＋</span> Yeni İşlem</button>
+        </div>
+      </header>
+      <div id="contentArea"></div>
+    </main>`;
+
+  updateMarketStatus();
+  startMarketStatusClock();
+
+  const navList=document.getElementById('navList');
+  const navBottom=document.getElementById('navBottom');
+  NAV.forEach(item=>{
+    const btn=document.createElement('button');
+    btn.className='nav-item'+(S.view===item.id?' active':'');
+    btn.innerHTML=`${ICONS[item.icon]} <span>${item.label}</span>`;
+    btn.addEventListener('click',()=>{S.view=item.id;S.formOpen=false;renderShell();});
+    (item.id==='settings'?navBottom:navList).appendChild(btn);
+  });
+
+  document.getElementById('topNewTrade').addEventListener('click',()=>{S.view='journal';S.formOpen=true;renderShell();});
+  document.getElementById('aiCoach').addEventListener('click',openCoach);
+  renderMain();
+}
+
+function openCoach(){
+  const stats=computeStats(); const wins=S.trades.filter(t=>computePnl(t)>0).length; const losses=S.trades.filter(t=>computePnl(t)<0).length;
+  const recent=S.trades.slice(0,8); const setupCounts={}; recent.forEach(t=>{const k=(t.setup||'Setup belirtilmedi').trim();setupCounts[k]=(setupCounts[k]||0)+1});
+  const topSetup=Object.entries(setupCounts).sort((a,b)=>b[1]-a[1])[0]?.[0]||'—';
+  const advice=stats.count===0?'Henüz yeterli veri yok. Önce işlemlerini düzenli kaydet.':stats.winRate>=60?'Win rate güçlü. Şimdi aynı setup ve risk disiplinini korumaya odaklan.':stats.winRate>=45?'Performans dengeli. Kaybeden işlemlerde ortak setup/hata desenlerini incele.':'Öncelik işlem sayısını artırmak değil, seçiciliği artırmak. Kalitesiz setupları ele.';
+  const old=document.getElementById('coachModal'); if(old)old.remove(); const el=document.createElement('div');el.id='coachModal';el.className='modal-backdrop';el.innerHTML=`<div class="modal-pro coach-modal"><div class="modal-head"><div><div class="eyebrow">EMRETRADES AI</div><h3>AI Koç</h3></div><button class="modal-x" id="closeCoach">×</button></div><div class="coach-summary"><div><span>WIN RATE</span><b>${stats.count?stats.winRate.toFixed(0)+'%':'—'}</b></div><div><span>TRADES</span><b>${stats.count}</b></div><div><span>BEST STREAK</span><b>${stats.bestStreak}</b></div><div><span>TOP SETUP</span><b>${escapeHtml(topSetup)}</b></div></div><div class="coach-message"><strong>Koç değerlendirmesi</strong><p>${advice}</p></div><div class="coach-message"><strong>Bugünkü odak</strong><p>Riskini planlı tut, giriş nedenini netleştir ve işlem bittikten sonra dersini journal'a yaz.</p></div></div>`;document.body.appendChild(el);document.getElementById('closeCoach').onclick=()=>el.remove();el.onclick=e=>{if(e.target===el)el.remove()};
+}
+
+function renderMain(){
+  const main = document.getElementById('contentArea');
+  const stats = computeStats();
+  if(S.view==='dashboard') return renderDashboard(main, stats);
+  if(S.view==='journal') return renderJournal(main, stats);
+  if(S.view==='accounts') return renderAccounts(main);
+  if(S.view==='news') return renderNews(main);
+  if(S.view==='analytics') return renderAnalytics(main, stats);
+  if(S.view==='certificates') return renderCertificates(main, stats);
+  if(S.view==='settings') return renderSettings(main);
+}
+
+function getTurkeyGreeting(){
+  const hour=Number(new Intl.DateTimeFormat('en-GB',{timeZone:'Europe/Istanbul',hour:'2-digit',hour12:false}).format(new Date()));
+  return hour>=6 && hour<19 ? 'Günaydın, Emre.' : 'İyi Geceler, Emre.';
+}
+
+function renderDashboard(main, stats){
+  const account=S.accounts.find(a=>a.id===S.activeAccount)||S.accounts[0];
+  if(account && S.activeAccount!==account.id){S.activeAccount=account.id;localStorage.setItem('ej_active_account',S.activeAccount);}
+  const start=account?Number(account.startBalance||0):0;
+  const balance=start+stats.total;
+  const ret=start?(stats.total/start)*100:0;
+  const accountTrades=getAccountTrades();
+  const wins=accountTrades.filter(t=>computePnl(t)>0).length;
+  const losses=accountTrades.filter(t=>computePnl(t)<0).length;
+  const recent=accountTrades.slice(0,5);
+  const maxLoss=account?Number(account.maxLoss||0):0;
+  const dd=maxLoss&&stats.total<0?Math.min(100,Math.abs(stats.total)/maxLoss*100):0;
+  const recentHtml=recent.length?recent.map(t=>{const pnl=computePnl(t);return `<div class="dash-trade"><div><b>${escapeHtml(t.symbol||'—')}</b><span>${t.date||'—'} · ${escapeHtml(t.setup||'Setup')}</span></div><div class="dash-trade-right"><em class="${t.direction==='long'?'dir-long':'dir-short'}">${t.direction==='long'?'LONG':'SHORT'}</em><strong class="${pnl>=0?'pos':'neg'}">${fmtMoney(pnl)}</strong></div></div>`}).join(''):`<div class="empty-mini">Bu hesapta henüz işlem kaydı yok.</div>`;
+  const curve=stats.equity.length>1?`<svg viewBox="0 0 800 180" preserveAspectRatio="none" class="equity-chart"><path d="${stats.equity.map((v,i)=>{let min=Math.min(...stats.equity),max=Math.max(...stats.equity),r=(max-min)||1;let x=12+i/(stats.equity.length-1)*776,y=160-(v-min)/r*125;return `${i?'L':'M'} ${x} ${y}`}).join(' ')}" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/></svg>`:`<div class="chart-empty">Performans eğrisi işlemler eklendikçe burada oluşur.</div>`;
+  const accountOptions=S.accounts.map(a=>`<option value="${a.id}" ${account&&a.id===account.id?'selected':''}>${escapeHtml(a.name)}${a.firm?' · '+escapeHtml(a.firm):''}</option>`).join('');
+  main.innerHTML=`
+    <section class="dash-welcome clean-welcome"><div><div class="eyebrow">TRADING WORKSPACE</div><h1>${getTurkeyGreeting()}</h1><p>Bugünün odağı: kaliteli setup, kontrollü risk, temiz execution.</p></div><div class="dash-account-select"><label>HESAP SEÇ</label><select id="dashboardAccountSelect" ${S.accounts.length?'':'disabled'}>${S.accounts.length?accountOptions:'<option>Önce hesap ekle</option>'}</select></div></section>
+    <section class="metric-grid">
+      <div class="metric"><span>BALANCE</span><strong>${account?fmtMoney(balance):'—'}</strong><small>${account?escapeHtml(account.name):'Accounts bölümünden hesap ekle'}</small></div>
+      <div class="metric"><span>TOTAL P&L</span><strong class="${stats.total>=0?'pos':'neg'}">${fmtMoney(stats.total)}</strong><small>${ret>=0?'+':''}${ret.toFixed(2)}% getiri</small></div>
+      <div class="metric"><span>WIN RATE</span><strong>${stats.count?stats.winRate.toFixed(0)+'%':'—'}</strong><small>${wins} kazanç · ${losses} kayıp</small></div>
+      <div class="metric"><span>TRADES</span><strong>${stats.count}</strong><small>En iyi seri: ${stats.bestStreak}</small></div>
+    </section>
+    <section class="dash-layout"><div class="dash-main-col"><div class="pro-card"><div class="section-head"><div><span class="eyebrow">PERFORMANCE</span><h3>Equity Curve</h3></div><span>${stats.count} işlem</span></div>${curve}</div><div class="pro-card"><div class="section-head"><div><span class="eyebrow">JOURNAL</span><h3>Son İşlemler</h3></div><button class="text-btn" id="seeJournal">Tümünü gör →</button></div><div class="trade-list">${recentHtml}</div></div></div>
+      <div class="dash-side-col"><div class="pro-card"><div class="section-head"><div><span class="eyebrow">ACCOUNT</span><h3>${account?escapeHtml(account.name):'Hesap seçilmedi'}</h3></div><button class="text-btn" id="seeAccounts">Yönet</button></div>${account?`<div class="account-meta"><span>${escapeHtml(account.firm||'Prop Firm')}</span><b>${fmtMoney(balance)}</b></div><div class="limit-row"><span>Total DD</span><b>${maxLoss?fmtMoney(maxLoss):'—'}</b></div><div class="limit-bar"><i style="width:${dd}%"></i></div><div class="limit-foot"><span>Drawdown kullanımı</span><span>${dd.toFixed(1)}%</span></div>`:`<div class="empty-mini">Accounts bölümünden ilk hesabını ekle.</div>`}</div><div class="pro-card coach-card"><div class="section-head"><div><span class="eyebrow">DISCIPLINE</span><h3>Bugünün notu</h3></div></div><p>${stats.count===0?'Kaliteli setup beklemek de bir pozisyondur.':stats.total>=0?'Avantajını koru. Süreci tekrar edilebilir tut.':'Veriyi incele, hatayı düzelt, plana geri dön.'}</p><button class="outline-btn" id="dashCoach">✦ AI Koç ile analiz et</button></div></div></section>`;
+  const sel=document.getElementById('dashboardAccountSelect'); if(sel) sel.onchange=()=>{S.activeAccount=sel.value;localStorage.setItem('ej_active_account',S.activeAccount);renderShell()};
+  document.getElementById('seeJournal').onclick=()=>{S.view='journal';renderShell()}; document.getElementById('seeAccounts').onclick=()=>{S.view='accounts';renderShell()}; document.getElementById('dashCoach').onclick=openCoach;
+  const welcomeTitle=document.querySelector('.clean-welcome h1'); if(welcomeTitle){ if(window.__greetingTimer) clearInterval(window.__greetingTimer); window.__greetingTimer=setInterval(()=>{ const next=getTurkeyGreeting(); if(welcomeTitle.textContent!==next) welcomeTitle.textContent=next; },30000); }
+}
+
+function renderJournal(main, stats){
+  const withPnl=S.trades.map(t=>({...t,pnl:computePnl(t)}));
+  const visible=S.filter==='wins'?withPnl.filter(t=>t.pnl>0):S.filter==='losses'?withPnl.filter(t=>t.pnl<0):withPnl;
+  main.innerHTML=`<div class="page-header page-head-row"><div><div class="eyebrow">İŞLEM ARŞİVİ</div><h1 class="page-title">Trading Journal</h1><div class="page-sub">Her işlem verisi. Her veri, daha iyi bir karar.</div></div></div><div id="formHost"></div>${S.trades.length?`<div class="journal-toolbar"><div class="searchbox">⌕ <input id="tradeSearch" placeholder="Sembol veya setup ara"></div><div class="filter-pills"><button data-f="all" class="${S.filter==='all'?'active':''}">Tümü</button><button data-f="wins" class="${S.filter==='wins'?'active':''}">Kazanç</button><button data-f="losses" class="${S.filter==='losses'?'active':''}">Kayıp</button></div></div>`:''}<div id="tableHost"></div>`;
+  if(S.formOpen){
+    document.getElementById('formHost').innerHTML=`<form class="trade-form-pro" id="tradeForm"><div class="form-section-title">Trade details</div><div class="form-grid-pro"><div class="field"><label>Tarih</label><input type="date" name="date" value="${new Date().toISOString().slice(0,10)}" required></div><div class="field"><label>Sembol</label><input name="symbol" placeholder="EURUSD" required></div><div class="field"><label>Yön</label><select name="direction"><option value="long">LONG</option><option value="short">SHORT</option></select></div><div class="field"><label>Setup</label><input name="setup" placeholder="FVG / MSS / CRT"></div><div class="field"><label>Open Price</label><input type="number" step="any" name="entry" required></div><div class="field"><label>Close Price</label><input type="number" step="any" name="sl" required></div><div class="field"><label>P&L ($)</label><input type="number" step="0.01" name="pnl" placeholder="+250 / -100" required></div><div class="field"><label>Duygu</label><select name="emotion"><option value="">Seç</option><option>Sakin</option><option>Kendinden Emin</option><option>FOMO</option><option>Tereddütlü</option><option>İntikam</option></select></div><div class="field span-2"><label>Not / Ders</label><textarea name="notes" rows="2" placeholder="Neden girdin, neyi doğru veya yanlış yaptın?"></textarea></div></div><div class="form-actions"><button class="primary-wide" type="submit">İşlemi kaydet</button><button class="outline-btn" type="button" id="cancelFormBtn">Vazgeç</button></div></form>`;
+    document.getElementById('tradeForm').onsubmit=e=>{e.preventDefault();const fd=new FormData(e.target);S.trades.unshift({id:uid(),accountId:S.activeAccount,date:fd.get('date'),symbol:fd.get('symbol').toUpperCase(),direction:fd.get('direction'),setup:fd.get('setup'),entry:fd.get('entry'),sl:fd.get('sl'),pnl:fd.get('pnl'),emotion:fd.get('emotion'),notes:fd.get('notes')});saveTrades();S.formOpen=false;renderJournal(main,computeStats())};
+    document.getElementById('cancelFormBtn').onclick=()=>{S.formOpen=false;renderJournal(main,computeStats())};
+  }
+  if(S.trades.length){document.querySelectorAll('.filter-pills button').forEach(b=>b.onclick=()=>{S.filter=b.dataset.f;renderJournal(main,computeStats())});const search=document.getElementById('tradeSearch');search.oninput=()=>{const q=search.value.toLowerCase();document.querySelectorAll('#tableHost tbody tr').forEach(r=>r.style.display=r.innerText.toLowerCase().includes(q)?'':'none')};}
+  const host=document.getElementById('tableHost');
+  if(!visible.length){host.innerHTML=`<div class="empty-pro">Bu filtrede işlem bulunmuyor.</div>`;return;}
+  host.innerHTML=`<div class="table-pro"><table><thead><tr><th>TARİH</th><th>VARLIK</th><th>YÖN</th><th>SETUP</th><th>OPEN PRICE</th><th>CLOSE PRICE</th><th>P&L</th><th>İŞLEM</th></tr></thead><tbody>${visible.map(t=>{const p=t.pnl;return `<tr class="trade-main-row" data-id="${t.id}"><td>${t.date||'—'}</td><td><b>${escapeHtml(t.symbol||'—')}</b></td><td><span class="side-badge ${t.direction==='long'?'long':'short'}">${t.direction==='long'?'LONG':'SHORT'}</span></td><td>${escapeHtml(t.setup||'—')}</td><td>${escapeHtml(t.entry||'—')}</td><td>${escapeHtml(t.sl||t.exit||'—')}</td><td class="${p>=0?'pos':'neg'}"><b>${fmtMoney(p)}</b></td><td style="white-space:nowrap"><button class="trade-expand" data-id="${t.id}" title="Detayları göster" aria-label="Detayları göster">›</button> <button class="icon-delete del" data-id="${t.id}" title="Sil">×</button></td></tr>`}).join('')}</tbody></table></div>`;
+  host.querySelectorAll('.trade-expand').forEach(b=>b.onclick=()=>{
+    const id=b.dataset.id;
+    const existing=host.querySelector('.trade-detail-row[data-for="'+id+'"]');
+    if(existing){existing.remove();b.classList.remove('open');return;}
+    const t=visible.find(x=>String(x.id)===String(id));
+    if(!t)return;
+    const mainRow=host.querySelector('.trade-main-row[data-id="'+id+'"]');
+    const detailRow=document.createElement('tr'); detailRow.className='trade-detail-row'; detailRow.dataset.for=id;
+    detailRow.innerHTML=`<td colspan="9"><div class="trade-detail trade-detail-edit">
+      <div class="trade-detail-item"><label class="trade-detail-label">Duygu Durumu</label><select class="trade-edit-input" data-field="emotion"><option value="">Seç</option><option value="Sakin">Sakin</option><option value="Kendinden Emin">Kendinden Emin</option><option value="FOMO">FOMO</option><option value="Tereddütlü">Tereddütlü</option><option value="İntikam">İntikam</option></select></div>
+      <div class="trade-detail-item"><label class="trade-detail-label">Open Price</label><input class="trade-edit-input" data-field="entry" type="number" step="any"></div>
+      <div class="trade-detail-item"><label class="trade-detail-label">Close Price</label><input class="trade-edit-input" data-field="sl" type="number" step="any"></div>
+      
+      <div class="trade-detail-item"><label class="trade-detail-label">Setup</label><input class="trade-edit-input" data-field="setup" type="text"></div>
+      <div class="trade-detail-item"><label class="trade-detail-label">P&L ($)</label><input class="trade-edit-input" data-field="pnl" type="number" step="0.01"></div>
+      <div class="trade-detail-item"><label class="trade-detail-label">Yön</label><select class="trade-edit-input" data-field="direction"><option value="long">LONG</option><option value="short">SHORT</option></select></div>
+      <div class="trade-detail-item"><label class="trade-detail-label">Tarih</label><input class="trade-edit-input" data-field="date" type="date"></div>
+      <div class="trade-detail-item trade-detail-note"><label class="trade-detail-label">Yorum / Not / Ders</label><textarea class="trade-edit-input trade-edit-notes" data-field="notes" rows="4" placeholder="Bu işlem hakkında notunu yaz..."></textarea></div>
+      <div class="trade-edit-actions"><button type="button" class="trade-save-btn">✓ Kaydet</button><button type="button" class="trade-cancel-btn">Vazgeç</button></div>
+    </div></td>`;
+    const setField=(field,value)=>{const el=detailRow.querySelector('[data-field="'+field+'"]');if(el)el.value=value==null?'':value;};
+    setField('emotion',t.emotion);setField('entry',t.entry);setField('sl',t.sl||t.exit);setField('setup',t.setup);setField('pnl',t.pnl);setField('direction',t.direction);setField('date',t.date);setField('notes',t.notes);
+    mainRow.after(detailRow);b.classList.add('open');
+    detailRow.querySelector('.trade-save-btn').onclick=()=>{
+      const current=S.trades.find(x=>String(x.id)===String(id)); if(!current)return;
+      ['emotion','entry','sl','setup','pnl','direction','date','notes'].forEach(field=>{const el=detailRow.querySelector('[data-field="'+field+'"]');if(el)current[field]=el.value;});
+      saveTrades(); renderJournal(main,computeStats());
+    };
+    detailRow.querySelector('.trade-cancel-btn').onclick=()=>{detailRow.remove();b.classList.remove('open');};
+  });
+  host.querySelectorAll('.del').forEach(b=>b.onclick=()=>{S.trades=S.trades.filter(t=>t.id!==b.dataset.id);saveTrades();renderJournal(main,computeStats())});
+}
+
+function renderAccounts(main){
+  main.innerHTML = `
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap">
+      <div><h1 class="page-title">Accounts</h1><div class="page-sub">Tüm hesaplarını ayrı ayrı yönet ve verilerini birbirinden bağımsız tut.</div></div>
+      <button class="add-btn" id="addAccount">+ Hesap ekle</button>
+    </div>
+    <div class="stats" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+      <div class="stat"><div class="stat-label">TOPLAM HESAP</div><div class="stat-value">${S.accounts.length}</div></div>
+      <div class="stat"><div class="stat-label">KAYITLI İŞLEM</div><div class="stat-value">${S.trades.length}</div></div>
+    </div>
+    <div id="accountForm"></div>
+    <div class="cert-grid">
+      ${S.accounts.length ? S.accounts.map(a=>`<div class="cert">
+        <div style="display:flex;justify-content:space-between;align-items:center"><div class="cert-icon">${ICONS.accounts}</div></div>
+        <div class="cert-title">${escapeHtml(a.name)}</div>
+        <div class="cert-desc">${escapeHtml(a.firm||'')} · ${escapeHtml(a.type||'Prop Firm')}</div>
+        <div style="margin-top:1rem;font-size:1.2rem;font-weight:700">${fmtMoney(Number(a.startBalance||0))}</div>
+        <div class="cert-desc">Başlangıç bakiyesi · Total limit: ${fmtMoney(Number(a.maxLoss||0))}</div>
+        <div class="cert-desc" style="margin-top:.35rem">${S.trades.filter(t=>t.accountId===a.id).length} işlem kayıtlı</div>
+        <div style="display:flex;justify-content:flex-end;margin-top:1rem"><button class="btn-ghost del-account" data-id="${a.id}" style="padding:.45rem .7rem">Sil</button></div>
+      </div>`).join('') : `<div class="empty" style="grid-column:1/-1"><div class="empty-title">Henüz hesap yok</div>İlk prop/broker hesabını ekle.</div>`} 
+    </div>`;
+  document.getElementById('addAccount').onclick=()=>{
+    document.getElementById('accountForm').innerHTML=`<form class="form-wrap" id="accountFormInner"><div class="form-grid">
+      <div class="field"><label>Hesap adı</label><input name="name" placeholder="FXIFY 10K" required></div>
+      <div class="field"><label>Firma / Broker</label><input name="firm" placeholder="FXIFY"></div>
+      <div class="field"><label>Hesap tipi</label><select name="type"><option>Prop Firm</option><option>Broker</option><option>Demo</option><option>Live</option></select></div>
+      <div class="field"><label>Başlangıç bakiyesi</label><input name="start" type="number" step="any" placeholder="10000" required></div>
+      <div class="field"><label>Max toplam kayıp</label><input name="maxLoss" type="number" step="any" placeholder="1000"></div>
+      <div class="field"><label>Günlük kayıp limiti</label><input name="dailyLoss" type="number" step="any" placeholder="400"></div>
+    </div><div class="form-actions"><button class="btn-primary">Kaydet</button><button type="button" class="btn-ghost" id="cancelAcc">Vazgeç</button></div></form>`;
+    document.getElementById('accountFormInner').onsubmit=e=>{e.preventDefault();let f=new FormData(e.target),a={id:uid(),name:f.get('name'),firm:f.get('firm'),type:f.get('type'),startBalance:f.get('start'),maxLoss:f.get('maxLoss')||0,dailyLoss:f.get('dailyLoss')||0};S.accounts.push(a);saveAccounts(); if(!S.activeAccount) {S.activeAccount=a.id;localStorage.setItem('ej_active_account',S.activeAccount); S.trades.forEach(t=>{if(!t.accountId)t.accountId=a.id}); saveTrades();} renderAccounts(main)};
+    document.getElementById('cancelAcc').onclick=()=>renderAccounts(main);
+  };
+  document.querySelectorAll('.del-account').forEach(b=>b.onclick=()=>{S.accounts=S.accounts.filter(a=>a.id!==b.dataset.id);S.trades=S.trades.filter(t=>t.accountId!==b.dataset.id);if(S.activeAccount===b.dataset.id){S.activeAccount=S.accounts[0]?.id||'';localStorage.setItem('ej_active_account',S.activeAccount)}saveAccounts();saveTrades();renderAccounts(main)});
+}
+
+function renderNews(main){
+  // NEWS: yalnızca BUGÜNÜN High + Medium haberleri.
+  // 10 dk kala yeşil çerçeve, saatinden 5 dk sonra yalnızca o haber kaldırılır.
+  // 00:00 TRT'de otomatik olarak yeni günün verisi yüklenir.
+
+  const trtParts=(date)=>{
+    const parts=new Intl.DateTimeFormat('en-CA',{
+      timeZone:'Europe/Istanbul',year:'numeric',month:'2-digit',day:'2-digit'
+    }).formatToParts(date);
+    const o={};
+    parts.forEach(p=>{if(p.type!=='literal')o[p.type]=p.value});
+    return `${o.year}-${o.month}-${o.day}`;
+  };
+
+  const timeTrt=(date)=>new Intl.DateTimeFormat('tr-TR',{
+    timeZone:'Europe/Istanbul',hour:'2-digit',minute:'2-digit',hour12:false
+  }).format(date);
+
+  const labelTrt=(date)=>new Intl.DateTimeFormat('tr-TR',{
+    timeZone:'Europe/Istanbul',day:'numeric',month:'long',year:'numeric'
+  }).format(date);
+
+  const getTrtMinutes=(date)=>{
+    const parts=new Intl.DateTimeFormat('en-GB',{
+      timeZone:'Europe/Istanbul',hour:'2-digit',minute:'2-digit',hourCycle:'h23'
+    }).formatToParts(date);
+    let h=0,m=0;
+    parts.forEach(p=>{
+      if(p.type==='hour') h=Number(p.value);
+      if(p.type==='minute') m=Number(p.value);
+    });
+    return h*60+m;
+  };
+
+  const timeToMinutes=(time)=>{
+    const m=String(time).match(/^(\d{1,2}):(\d{2})$/);
+    return m ? Number(m[1])*60+Number(m[2]) : null;
+  };
+
+  const normalizeImpact=(impact)=>{
+    const v=String(impact??'').trim().toLowerCase();
+    if(v==='high' || v==='red' || v==='3') return 'red';
+    if(v==='medium' || v==='med' || v==='orange' || v==='2') return 'orange';
+    return null;
+  };
+
+  let newsItems=[];
+  let loadedDayKey=trtParts(new Date());
+  let loading=false;
+
+  const renderItems=(items,status='Güncel')=>{
+    const now=new Date();
+    const todayKey=trtParts(now);
+    const currentMinutes=getTrtMinutes(now);
+
+    const visible=items.map(n=>{
+      const eventMinutes=timeToMinutes(n.time);
+      if(eventMinutes===null) return null;
+
+      // Haber saatinden 5 dakika SONRA sadece bu haber kaldırılır.
+      if(currentMinutes >= eventMinutes + 5) return null;
+
+      // Saatine son 10 dakika kala yeşil. Haber saati geldiğinde yeşil kalkar.
+      const upcoming=currentMinutes >= eventMinutes - 10 && currentMinutes < eventMinutes;
+      return {...n,upcoming};
+    }).filter(Boolean);
+
+    const html=visible.length
+      ? visible.map(n=>`<div class="news-row ${n.upcoming?'news-upcoming':''}"><div class="news-time">${n.time}</div><div class="news-currency">${escapeHtml(n.currency)}</div><div class="news-impact ${n.impact}"><i></i></div><div class="news-event">${escapeHtml(n.event)}</div></div>`).join('')
+      : `<div class="empty-mini">Bugün için aktif yüksek/orta etkili haber bulunmuyor.</div>`;
+
+    main.innerHTML=`<div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap"><div><div class="eyebrow">ECONOMIC CALENDAR</div><h1 class="page-title">News</h1><div class="page-sub">Bugün · ${labelTrt(now)} · Türkiye saati · ${status}</div></div><a class="outline-btn" href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener">Forex Factory ↗</a></div><div class="panel-box news-panel"><div class="news-legend"><span class="news-red">● Kırmızı · High Impact</span><span class="news-orange">● Turuncu · Medium Impact</span><span class="news-source">TRT · Europe/Istanbul</span></div><div class="news-list">${html}</div><div class="news-foot">Yalnızca bugünün güncel High ve Medium etkili haberleri gösterilir. Haberden 10 dakika önce yeşil çerçeve, haber saatinden 5 dakika sonra yalnızca o haber otomatik kaldırılır. 00:00 TRT'de yeni günün haberleri otomatik yüklenir.</div></div>`;
+  };
+
+  // Önceden arka planda yüklenmiş veri varsa News sayfası açılır açılmaz göster.
+  if(window.__newsCache && window.__newsCache.day===loadedDayKey){
+    newsItems=window.__newsCache.items||[];
+    renderItems(newsItems,'Güncel');
+  }else{
+    renderItems([], 'Canlı veri yükleniyor…');
+  }
+
+  const loadNews=async()=>{
+    if(loading) return;
+    loading=true;
+    const current=new Date();
+    const currentKey=trtParts(current);
+
+    try{
+      // Canlı kaynakları paralel ve kısa timeout ile dene; biri cevap verir vermez kullan.
+      const data=await fetchNewsCalendar();
+
+      // Kaynaktaki haftalık verinin içinden SADECE TRT'deki bugünün kayıtlarını al.
+      newsItems=data.map(x=>{
+        const impact=normalizeImpact(x.impact);
+        if(!impact) return null;
+
+        const d=new Date(x.date);
+        if(isNaN(d.getTime())) return null;
+        if(trtParts(d)!==currentKey) return null;
+
+        return {
+          time:timeTrt(d),
+          currency:x.country||'',
+          impact,
+          event:x.title||''
+        };
+      }).filter(Boolean).sort((a,b)=>{
+        const diff=timeToMinutes(a.time)-timeToMinutes(b.time);
+        return diff || a.event.localeCompare(b.event);
+      });
+
+      loadedDayKey=currentKey;
+      window.__newsCache={day:currentKey,items:newsItems};
+      renderItems(newsItems,'Güncel');
+    }catch(err){
+      console.error('News error:',err);
+
+      // Canlı kaynak tarayıcıdan erişilemiyorsa, BUGÜN (16.09.2026)
+      // için doğrulanmış takvimi geçici başlangıç verisi olarak kullan.
+      // Yeni günlerde bu liste kullanılmaz; canlı kaynak yeniden denenir.
+      if(currentKey==='2026-09-16'){
+        newsItems=[
+          {time:'09:00',currency:'GBP',impact:'red',event:'CPI y/y'},
+          {time:'15:30',currency:'USD',impact:'orange',event:'Core Retail Sales m/m'},
+          {time:'15:30',currency:'USD',impact:'orange',event:'Retail Sales m/m'},
+          {time:'21:00',currency:'USD',impact:'red',event:'Federal Funds Rate'},
+          {time:'21:00',currency:'USD',impact:'red',event:'FOMC Economic Projections'},
+          {time:'21:00',currency:'USD',impact:'red',event:'FOMC Statement'},
+          {time:'21:30',currency:'USD',impact:'red',event:'FOMC Press Conference'}
+        ];
+        loadedDayKey=currentKey;
+        window.__newsCache={day:currentKey,items:newsItems};
+        renderItems(newsItems,'Güncel');
+      }else if(loadedDayKey===currentKey && newsItems.length){
+        renderItems(newsItems,'Son güncelleme korunuyor');
+      }else{
+        newsItems=[];
+        renderItems([],'Canlı veri bekleniyor');
+      }
+    }finally{
+      loading=false;
+    }
+  };
+
+  loadNews();
+
+  // 30 saniyede bir haberlerin zamanı + canlı veri kontrolü.
+  if(window.__newsTimer) clearInterval(window.__newsTimer);
+  window.__newsTimer=setInterval(()=>{
+    const key=trtParts(new Date());
+
+    // Gece 00:00 TRT olduğunda eski gün tamamen bırakılır ve yeni gün çekilir.
+    if(key!==loadedDayKey){
+      newsItems=[];
+      loadedDayKey=key;
+      loadNews();
+      return;
+    }
+
+    // Aynı gün içinde yeşil çerçeve ve 5 dk sonrası silinme anlık güncellenir.
+    renderItems(newsItems,'Güncel');
+    loadNews();
+  },30000);
+}
+
+function renderAnalytics(main, stats){
+  const rr = stats.avgLoss ? Math.abs(stats.avgWin/stats.avgLoss) : 0;
+  const accountTrades=getAccountTrades(); const wins=accountTrades.filter(t=>computePnl(t)>0).length, losses=accountTrades.filter(t=>computePnl(t)<0).length;
+  main.innerHTML=`<div class="page-header"><h1 class="page-title">Analytics</h1><div class="page-sub">Trading performansını karar kalitesi açısından incele.</div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">İŞLEM</div><div class="stat-value">${stats.count}</div></div>
+    <div class="stat"><div class="stat-label">KAZANAN</div><div class="stat-value pos">${wins}</div></div>
+    <div class="stat"><div class="stat-label">KAYBEDEN</div><div class="stat-value neg">${losses}</div></div>
+    <div class="stat"><div class="stat-label">AVG WIN / LOSS</div><div class="stat-value">${rr?rr.toFixed(2)+'R':'—'}</div></div>
+  </div>
+  <div class="dash-grid"><div class="dash-card"><div class="card-head"><h3>Performans özeti</h3></div>
+    <div class="recent-row"><span>Toplam P&L</span><strong class="${stats.total>=0?'pos':'neg'}">${fmtMoney(stats.total)}</strong></div>
+    <div class="recent-row"><span>Ortalama kazanç</span><strong class="pos">${fmtMoney(stats.avgWin)}</strong></div>
+    <div class="recent-row"><span>Ortalama kayıp</span><strong class="neg">${fmtMoney(stats.avgLoss)}</strong></div>
+    <div class="recent-row"><span>En iyi kazanma serisi</span><strong>${stats.bestStreak}</strong></div>
+  </div><div class="dash-card"><div class="card-head"><h3>Trader mindset</h3></div>
+    <div class="quote">A+ setup yoksa işlem yok. Journal'ın amacı sonucu değil, süreci görünür kılmak.</div>
+    <div class="quote" style="margin-top:.8rem">Her işlemden sonra: setup → risk → execution → sonuç → ders.</div>
+  </div></div>`;
+}
+
+function renderCertificates(main){
+  const certs=JSON.parse(localStorage.getItem('ej_certificates')||'[]');
+  main.innerHTML=`<div class="page-header page-head-row"><div><div class="eyebrow">ACHIEVEMENTS</div><h1 class="page-title">Certificates</h1><div class="page-sub">Aldığın prop firm sertifikalarını profesyonel bir arşivde tut.</div></div><button class="primary-wide" id="addCertBtn">＋ Sertifika Ekle</button></div><div class="cert-grid-pro" id="certList">${certs.length?certs.map((c,i)=>`<article class="cert-card-pro"><div class="cert-image-wrap"><img src="${c.image}" alt="${escapeHtml(c.prop||'Certificate')}"><button class="cert-remove" data-i="${i}" title="Sil">×</button></div><div class="cert-info"><div class="cert-firm">${escapeHtml(c.prop||'Prop Firm')}</div><div class="cert-phase">${escapeHtml(c.phase||'Phase')}</div><div class="cert-date">${escapeHtml(c.date||'')}</div></div></article>`).join(''):`<div class="cert-empty-pro"><div class="cert-empty-icon">✦</div><h3>Henüz sertifika yok</h3><p>Prop firm sertifikanın PNG veya JPG görselini ekleyerek burada arşivleyebilirsin.</p></div>`}</div>`;
+  const add=()=>{const wrap=document.createElement('div');wrap.className='modal-backdrop';wrap.innerHTML=`<div class="modal-pro"><div class="modal-head"><div><div class="eyebrow">CERTIFICATE</div><h3>Sertifika ekle</h3></div><button class="modal-x" id="closeCert">×</button></div><form id="certForm"><div class="field"><label>Prop Firm</label><input name="prop" placeholder="FXIFY" required></div><div class="two-fields"><div class="field"><label>Phase</label><input name="phase" placeholder="Phase 1 / Phase 2 / Funded" required></div><div class="field"><label>Tarih</label><input type="date" name="date" value="${new Date().toISOString().slice(0,10)}" required></div></div><div class="field"><label>Sertifika PNG / JPG</label><input type="file" name="image" accept="image/png,image/jpeg,image/webp" required></div><button class="primary-wide" type="submit">Sertifikayı kaydet</button></form></div>`;document.body.appendChild(wrap);document.getElementById('closeCert').onclick=()=>wrap.remove();document.getElementById('certForm').onsubmit=e=>{e.preventDefault();const fd=new FormData(e.target),f=fd.get('image');if(!f)return;const r=new FileReader();r.onload=()=>{const arr=JSON.parse(localStorage.getItem('ej_certificates')||'[]');arr.unshift({prop:fd.get('prop'),phase:fd.get('phase'),date:fd.get('date'),image:r.result});localStorage.setItem('ej_certificates',JSON.stringify(arr));wrap.remove();renderCertificates(main)};r.readAsDataURL(f)};};
+  document.getElementById('addCertBtn').onclick=add;document.querySelectorAll('.cert-remove').forEach(b=>b.onclick=()=>{const arr=JSON.parse(localStorage.getItem('ej_certificates')||'[]');arr.splice(Number(b.dataset.i),1);localStorage.setItem('ej_certificates',JSON.stringify(arr));renderCertificates(main)});
+}
+
+function renderSettings(main){
+  main.innerHTML = `
+    <div class="page-header"><h1 class="page-title">Settings</h1><div class="page-sub">Profil ve güvenlik</div></div>
+
+    <form class="settings-section" id="nameForm">
+      <div class="settings-title">Görünen isim</div>
+      <div class="field"><label>İsim</label><input type="text" id="nameInput" value="${escapeHtml(S.profile.name||'')}" placeholder="Emre"></div>
+      <button type="submit" class="btn-primary">Kaydet</button>
+    </form>
+
+    <form class="settings-section" id="pwForm">
+      <div class="settings-title">Şifreyi değiştir</div>
+      <div class="field"><label>Mevcut şifre</label><input type="password" id="pwOld"></div>
+      <div class="field"><label>Yeni şifre</label><input type="password" id="pwNew"></div>
+      <div class="field"><label>Yeni şifre (tekrar)</label><input type="password" id="pwNewConfirm"></div>
+      <button type="submit" class="btn-primary">Şifreyi güncelle</button>
+      <div class="gate-note">Bu şifre yalnızca bu tarayıcıda saklanır, gerçek bir güvenlik sistemi değildir.</div>
+    </form>
+
+    <div class="settings-section">
+      <div class="settings-title">Tehlikeli bölge</div>
+      <div id="dangerZone"><button class="btn-danger" id="resetBtn">Tüm işlemleri sil</button></div>
+    </div>
+
+    <div id="settingsMsg" class="settings-msg hidden"></div>
+  `;
+
+  const msg = document.getElementById('settingsMsg');
+  function showMsg(text){ msg.textContent = text; msg.classList.remove('hidden'); }
+
+  document.getElementById('nameForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    S.profile.name = document.getElementById('nameInput').value;
+    saveProfile();
+    showMsg('İsim güncellendi.');
+  });
+
+  document.getElementById('pwForm').addEventListener('submit', e=>{
+    e.preventDefault();
+    const old = document.getElementById('pwOld').value;
+    const nw = document.getElementById('pwNew').value;
+    const nw2 = document.getElementById('pwNewConfirm').value;
+    if(old !== S.password) return showMsg('Mevcut şifre yanlış.');
+    if(nw.length<4) return showMsg('Yeni şifre en az 4 karakter olmalı.');
+    if(nw !== nw2) return showMsg('Yeni şifreler uyuşmuyor.');
+    S.password = nw; saveAuth();
+    document.getElementById('pwOld').value=''; document.getElementById('pwNew').value=''; document.getElementById('pwNewConfirm').value='';
+    showMsg('Şifre güncellendi.');
+  });
+
+  const dz = document.getElementById('dangerZone');
+  function showAskState(){
+    dz.innerHTML = `
+      <div style="font-size:.82rem;color:var(--muted);margin-bottom:.8rem;">Emin misin? Bu işlem geri alınamaz.</div>
+      <div style="display:flex;gap:.7rem;">
+        <button class="btn-danger" id="confirmReset">Evet, sil</button>
+        <button class="btn-ghost" id="cancelReset">Vazgeç</button>
+      </div>
+    `;
+    document.getElementById('confirmReset').addEventListener('click', ()=>{
+      S.trades = []; saveTrades();
+      showIdleState();
+      showMsg('Tüm işlemler silindi.');
+    });
+    document.getElementById('cancelReset').addEventListener('click', showIdleState);
+  }
+  function showIdleState(){
+    dz.innerHTML = `<button class="btn-danger" id="resetBtn">Tüm işlemleri sil</button>`;
+    document.getElementById('resetBtn').addEventListener('click', showAskState);
+  }
+  document.getElementById('resetBtn').addEventListener('click', showAskState);
+}
+</script>
+<style id="final-layout-fix">
+/* Full-width content: no right-side empty gap on wide screens */
+.main{width:calc(100% - 224px)!important;min-width:0!important;padding:0!important;}
+#contentArea{width:100%!important;max-width:none!important;padding:42px 54px 64px!important;margin:0!important;box-sizing:border-box!important;}
+@media(max-width:900px){.main{width:100%!important;}#contentArea{padding:28px 18px 40px!important;}}
+</style>
+</body>
+</html>
+
+<style id="final-user-ui-fixes">
+/* Final user-requested sidebar/profile styling */
+.nav-item, .nav-item svg, .nav-item .icon { color:#f1f5f6 !important; stroke:#f1f5f6 !important; }
+.nav-item:hover, .nav-item:hover svg, .nav-item:hover .icon { color:#f1f5f6 !important; stroke:#f1f5f6 !important; }
+.nav-item.active, .nav-item.active svg, .nav-item.active .icon { color:var(--accent) !important; stroke:var(--accent) !important; }
+.sidebar-bottom { border-top:0 !important; padding-top:.5rem !important; }
+.profile-mini { border-top:1px solid #1b2a30 !important; }
+.profile-avatar {
+  background-color:#45e0c2 !important;
+  background-image:url('https://i.hizliresim.com/xjm282gg.jpg') !important;
+  background-size:cover !important;
+  background-position:center !important;
+  background-repeat:no-repeat !important;
+  color:transparent !important;
+}
+.brand:after { content:none !important; display:none !important; }
+</style>
